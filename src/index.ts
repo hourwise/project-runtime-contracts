@@ -11,4 +11,5 @@ export * from "./runtime/RuntimeMessage";
 export * from "./runtime/Version";
 export * from "./runtime/RuntimeKind";
 export * from "./protocol/ProtocolVersion";
+export * from "./constants";
 
