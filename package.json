@@ -1,0 +1,30 @@
+{
+  "name": "project-runtime-contracts",
+  "version": "0.1.0",
+  "description": "Shared runtime protocol contracts for Project Ananke and Project Mnemosyne",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "scripts": {
+    "build": "tsc -p tsconfig.json",
+    "clean": "rimraf dist",
+    "prepublishOnly": "npm run build"
+  },
+  "keywords": [
+    "runtime",
+    "contracts",
+    "protocol",
+    "ananke",
+    "mnemosyne"
+  ],
+  "author": "",
+  "license": "MIT",
+  "dependencies": {
+    "zod": "^3.21.4"
+  },
+  "devDependencies": {
+    "typescript": "^5.4.2",
+    "@types/node": "^20.0.0",
+    "rimraf": "^5.0.0"
+  }
+}
+
