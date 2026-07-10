@@ -4,7 +4,7 @@ export interface RuntimeProtocol {
 }
 
 export const ProtocolVersion: RuntimeProtocol = {
-  version: "1.0.0",
+  version: "1.1.0",
   minimumSupported: "1.0.0",
 };
 

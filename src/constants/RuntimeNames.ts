@@ -6,6 +6,7 @@
 export const RUNTIME_NAMES = {
   ANANKE: "ananke",
   MNEMOSYNE: "mnemosyne",
+  HORAE: "horae",
   MOIRA: "moira",
 } as const;
 
