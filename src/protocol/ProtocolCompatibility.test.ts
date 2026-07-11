@@ -5,7 +5,7 @@ import {
   isCompatible,
   selectBestVersion,
   negotiate,
-} from "../src/protocol/ProtocolCompatibility";
+} from "./ProtocolCompatibility";
 
 describe("Protocol Compatibility Utilities", () => {
   describe("parseVersion", () => {

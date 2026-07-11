@@ -1,6 +1,6 @@
 import { describe, it, expect } from "vitest";
-import { RuntimeSessionSchema } from "../src/runtime/RuntimeSession";
-import { ISO8601TimestampSchema } from "../src/utils/Timestamp";
+import { RuntimeSessionSchema } from "./RuntimeSession";
+import { ISO8601TimestampSchema } from "../utils/Timestamp";
 
 describe("RuntimeSession Schema", () => {
   describe("Valid runtime sessions", () => {
@@ -27,7 +27,7 @@ describe("RuntimeSession Schema", () => {
         runtimeIds: ["horae", "ananke", "mnemosyne"],
         startedAt: "2024-07-11T14:30:00Z",
         expiresAt: "2024-07-11T15:30:00Z",
-        metadata: { environment: "production" },
+        metadata: { labels: { environment: "production" } },
       };
       const parsed = RuntimeSessionSchema.parse(session);
       expect(parsed).toEqual(session);

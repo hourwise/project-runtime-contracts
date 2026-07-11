@@ -3,7 +3,7 @@ import {
   ISO8601TimestampSchema,
   isValidISO8601Timestamp,
   getCurrentISO8601Timestamp,
-} from "../src/utils/Timestamp";
+} from "./Timestamp";
 
 describe("Timestamp Utilities", () => {
   describe("ISO8601TimestampSchema validation", () => {

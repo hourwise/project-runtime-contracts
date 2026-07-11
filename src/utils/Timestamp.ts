@@ -7,6 +7,18 @@ import { z } from "zod";
 const ISO8601_PATTERN =
   /^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}(?:\.\d{3})?(?:Z|[+-]\d{2}:\d{2})$/;
 
+function hasValidCalendarDate(value: string): boolean {
+  const [date] = value.split("T");
+  const [yearText, monthText, dayText] = date.split("-");
+  const year = Number(yearText);
+  const month = Number(monthText);
+  const day = Number(dayText);
+  const leapYear = year % 4 === 0 && (year % 100 !== 0 || year % 400 === 0);
+  const daysInMonth = [31, leapYear ? 29 : 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31];
+
+  return month >= 1 && month <= 12 && day >= 1 && day <= daysInMonth[month - 1];
+}
+
 /**
  * Zod schema for ISO 8601 UTC/offset timestamps.
  *
@@ -22,7 +34,7 @@ export const ISO8601TimestampSchema = z
     message:
       "Timestamp must be ISO 8601 format (e.g., 2024-07-11T14:30:00Z or 2024-07-11T14:30:00+05:30)",
   })
-  .refine((value) => !isNaN(Date.parse(value)), {
+  .refine((value) => hasValidCalendarDate(value) && !isNaN(Date.parse(value)), {
     message: "Timestamp must be a valid ISO 8601 date",
   });
 

@@ -4,8 +4,8 @@ import {
   RuntimeBindingRoleSchema,
   RuntimeBindingSchema,
   RuntimeCompositionSchema,
-} from "../src/runtime/RuntimeComposition";
-import { RuntimeTransport } from "../src/runtime/RuntimeRegistration";
+} from "./RuntimeComposition";
+import { RuntimeTransport } from "./RuntimeRegistration";
 
 describe("RuntimeBindingRole Schema", () => {
   describe("Valid binding roles", () => {
@@ -118,7 +118,7 @@ describe("RuntimeComposition Schema", () => {
         exposedCapabilityIds: ["query", "execute"],
         hiddenCapabilityIds: ["admin"],
         createdAt: "2024-07-11T14:30:00Z",
-        metadata: { env: "production" },
+        metadata: { labels: { env: "production" } },
       };
       const parsed = RuntimeCompositionSchema.parse(composition);
       expect(parsed).toEqual(composition);

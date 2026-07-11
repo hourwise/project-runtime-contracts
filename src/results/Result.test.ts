@@ -1,6 +1,6 @@
 import { describe, it, expect } from "vitest";
-import { createResultSchema, Result } from "../src/results/Result";
-import { RuntimeErrorSchema } from "../src/results/RuntimeError";
+import { createResultSchema, Result } from "./Result";
+import { RuntimeErrorSchema } from "./RuntimeError";
 import { z } from "zod";
 
 describe("Result Schema - Discriminated Union", () => {

@@ -3,7 +3,7 @@ import {
   RuntimeEventSchema,
   RuntimeEventType,
   RuntimeEventTypeSchema,
-} from "../src/runtime/RuntimeEvent";
+} from "./RuntimeEvent";
 
 describe("RuntimeEventType Schema", () => {
   describe("Valid core event types", () => {

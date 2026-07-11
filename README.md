@@ -136,3 +136,9 @@ These are contracts only. Horae can coordinate Ananke and Mnemosyne through thes
 - Maintain a strict protocol change policy and bump `ProtocolVersion` for breaking changes.
 
 If this package becomes widely adopted, consider shortening the repository name, for example `runtime-contracts`, and publishing as an npm package, for example `@your-org/runtime-contracts`.
+
+## Planning
+
+- [Research additions](docs/PROJECT_RUNTIME_CONTRACTS_RESEARCH_ADDITIONS.md)
+- [Roadmap](docs/ROADMAP.md)
+- [Build plan](docs/BUILD_PLAN.md)

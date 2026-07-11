@@ -1,7 +1,7 @@
 import { describe, it, expect } from "vitest";
-import { Severity, SeveritySchema } from "../src/results/Severity";
-import { AuditEventSchema, AuditEvent } from "../src/audit/AuditEvent";
-import { ISO8601TimestampSchema } from "../src/utils/Timestamp";
+import { Severity, SeveritySchema } from "../results/Severity";
+import { AuditEventSchema, AuditEvent } from "./AuditEvent";
+import { ISO8601TimestampSchema } from "../utils/Timestamp";
 
 describe("Severity Schema", () => {
   describe("Valid severity values", () => {

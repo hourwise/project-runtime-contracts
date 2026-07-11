@@ -1,7 +1,7 @@
 import { describe, it, expect } from "vitest";
-import { RuntimeIdentitySchema } from "../src/identity/RuntimeIdentity";
-import { RuntimeKind } from "../src/runtime/RuntimeKind";
-import { CapabilityCategory } from "../src/runtime/Capability";
+import { RuntimeIdentitySchema } from "./RuntimeIdentity";
+import { RuntimeKind } from "../runtime/RuntimeKind";
+import { CapabilityCategory } from "../runtime/Capability";
 
 describe("RuntimeIdentity Schema", () => {
   describe("Valid runtime identities", () => {
@@ -22,7 +22,7 @@ describe("RuntimeIdentity Schema", () => {
             category: CapabilityCategory.Memory,
           },
         ],
-        metadata: { env: "production" },
+        metadata: { labels: { env: "production" } },
       };
       const parsed = RuntimeIdentitySchema.parse(identity);
       expect(parsed).toEqual(identity);

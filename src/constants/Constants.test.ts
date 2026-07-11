@@ -2,12 +2,12 @@ import { describe, it, expect } from "vitest";
 import {
   RUNTIME_NAMES,
   RuntimeName,
-} from "../src/constants/RuntimeNames";
+} from "./RuntimeNames";
 import {
   DEFAULT_PROTOCOL_VERSION,
   DEFAULT_MINIMUM_SUPPORTED_VERSION,
-} from "../src/constants/ProtocolDefaults";
-import { ProtocolVersion } from "../src/protocol/ProtocolVersion";
+} from "./ProtocolDefaults";
+import { ProtocolVersion } from "../protocol/ProtocolVersion";
 
 describe("RUNTIME_NAMES Constants", () => {
   describe("Canonical names", () => {

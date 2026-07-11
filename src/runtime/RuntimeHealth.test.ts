@@ -3,7 +3,7 @@ import {
   RuntimeHealthStatus,
   RuntimeHealthStatusSchema,
   RuntimeHealthSchema,
-} from "../src/runtime/RuntimeHealth";
+} from "./RuntimeHealth";
 
 describe("RuntimeHealthStatus Schema", () => {
   describe("Valid health statuses", () => {

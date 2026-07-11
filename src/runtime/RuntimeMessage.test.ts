@@ -1,5 +1,5 @@
 import { describe, it, expect } from "vitest";
-import { RuntimeMessageSchema } from "../src/runtime/RuntimeMessage";
+import { RuntimeMessageSchema } from "./RuntimeMessage";
 
 describe("RuntimeMessage Schema", () => {
   describe("Valid runtime messages", () => {

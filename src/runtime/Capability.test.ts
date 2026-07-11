@@ -5,7 +5,7 @@ import {
   CapabilityCategorySchema,
   CapabilityExposureSchema,
   CapabilitySchema,
-} from "../src/runtime/Capability";
+} from "./Capability";
 
 describe("CapabilityCategory Schema", () => {
   describe("Valid capability categories", () => {
