@@ -7,6 +7,8 @@ The project intentionally contains no runtime logic. Its purpose is to provide a
 Current consumers:
 - Project Ananke
 - Project Mnemosyne
+- Project Horae
+- Moira Code
 
 Future / potential consumers:
 - Project Horae
