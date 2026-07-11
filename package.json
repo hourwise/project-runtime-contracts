@@ -1,6 +1,6 @@
 {
   "name": "project-runtime-contracts",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "description": "Shared runtime protocol contracts for Project Ananke and Project Mnemosyne",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
@@ -17,7 +17,7 @@
     }
   },
   "scripts": {
-    "build": "tsc -p tsconfig.json",
+    "build": "tsc -p tsconfig.build.json",
     "build:watch": "tsc -p tsconfig.json --watch",
     "clean": "rimraf dist",
     "typecheck": "tsc --noEmit",

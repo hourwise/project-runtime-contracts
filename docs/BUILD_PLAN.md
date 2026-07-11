@@ -28,6 +28,17 @@ Resolve these research ambiguities before coding:
 - Must browser evidence references be URIs, content hashes, or opaque IDs?
 - What is the smallest useful `ProjectRecord` envelope shared by Mnemosyne and other consumers?
 
+### 1.2.0 decisions (2026-07-11)
+
+- A `RuntimeSkill` requires a `source` with at least one non-empty `repository` or `publisher`.
+  `revision` and `licence` remain optional. `repository` is a portable locator string, not
+  necessarily an HTTP URL.
+- `trustState: "blocked"` is valid declared data. This package validates contract shape only;
+  consumers and policy runtimes decide whether a skill may be activated.
+- `ExecutionEnvironment.filesystemScope` contains non-empty opaque selectors. A selector may
+  represent a path or pattern according to the producing runtime, but this protocol does not
+  define or interpret a shared filesystem-expression language.
+
 ## 2. Use the repository's schema pattern
 
 For every contract family:

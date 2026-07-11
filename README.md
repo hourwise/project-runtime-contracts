@@ -126,6 +126,14 @@ The package now includes the contract surface needed for a future Horae orchestr
 
 These are contracts only. Horae can coordinate Ananke and Mnemosyne through these shapes later, but this package does not perform orchestration, routing, policy enforcement, memory retrieval, or persistence.
 
+## Trust and Isolation
+
+- `RuntimeSkill` describes portable skill provenance, declared capabilities, compatibility, requirements, and declared trust state.
+- `ExecutionEnvironment` describes the declared isolation level, provider, opaque filesystem scope, network-policy reference, and resource limits.
+- `RuntimeRiskClass` provides a shared serialized vocabulary for operational risk declarations.
+
+These declarations make capabilities observable and portable. They do not install skills, enforce policy, create sandboxes, or execute work.
+
 ## Design Notes
 
 - Keep this package minimal: only types, enums, constants, and small runtime-agnostic helpers.

@@ -11,6 +11,11 @@ export * from "./results/Severity";
 export * from "./audit/AuditEvent";
 export * from "./audit/AuditSeverity";
 
+// Skills, isolation, and risk
+export * from "./skill/RuntimeSkill";
+export * from "./isolation/ExecutionEnvironment";
+export * from "./risk/RuntimeRiskClass";
+
 // Runtimes
 export * from "./runtime/Capability";
 export * from "./runtime/RuntimeComposition";
