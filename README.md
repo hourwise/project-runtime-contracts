@@ -1,86 +1,45 @@
 # Project Runtime Contracts
 
-Project Runtime Contracts defines the shared protocol, types, schemas, and interfaces used by the Ananke and Mnemosyne runtimes.
+Project Runtime Contracts defines the shared protocol vocabulary, schemas, types, and
+compatibility helpers used across the runtime ecosystem. It is a contracts-only package:
+it does not implement policy engines, orchestration, memory systems, transport adapters,
+or other runtime logic.
 
-The project intentionally contains no runtime logic. Its purpose is to provide a small, stable, well-documented set of types and interfaces that independent runtimes can import to remain protocol compatible.
+Out of scope for this package: policy engines, orchestration logic, memory systems,
+retrieval and reliability scoring, context packs or memory stores, persistence, database
+adapters, gateway implementations, and other host/runtime behaviour.
 
-Current consumers:
+Current consumers named consistently in package metadata, examples, and source:
+
 - Project Ananke
 - Project Mnemosyne
-- Project Horae
-- Moira Code
 
-Future / potential consumers:
-- Project Horae
-- Moira Code
-- Third-party runtimes
-
-This repository should remain focused on contracts only. It should not contain engines, databases, persistence, policies, or runtime behavior. Keep the surface area small and stable: types, enums, constants, and small utility helpers if absolutely necessary.
-
-## Design Goals
-
-These principles guide all decisions in this repository:
-
-- **Runtime independent**: no code assumes or depends on any specific runtime implementation.
-- **No business logic**: only types, schemas, constants, and protocol definitions.
-- **Stable public API**: changes are rare and well-considered; breaking changes require major version bumps.
-- **Semantic versioning**: major, minor, patch follow standard conventions; `ProtocolVersion` tracks protocol compatibility separately.
-- **Backwards compatibility where practical**: new fields are optional; old consumers should continue working.
-- **Small surface area**: fewer exports means fewer breaking changes later.
-
-Why this matters: when an orchestrator discovers that Ananke speaks Protocol 2 but Mnemosyne only speaks Protocol 1, it should immediately know they are incompatible, not halfway through execution. These contracts make that negotiation fast and deterministic.
-
-What does not belong here:
-
-- `ApprovalEngine`
-- `MemoryEngine`
-- `WorkspaceGuard`
-- SQLite or database adapters
-- Audit database implementations
-- Retrieval, policies, or reliability scoring
-- Context packs or memory stores
-- MCP gateway implementations
-- Horae orchestration logic
-
-Those belong inside runtime implementations, not inside the shared contracts package.
-
-## Quick Start
-
-Install dev dependencies and build:
+Install and validate locally:
 
 ```powershell
 Set-Location "D:\Users\fleur\Project Runtime Contracts"
 npm install
-npm run build
-node dist/demo/sample-run.js
+npm run validate
 ```
 
-## Usage
-
-Import from the package after building or when published as an npm package:
+Minimal usage:
 
 ```ts
 import {
   CapabilityCategory,
   ProtocolVersion,
   RuntimeHealthStatus,
-  RuntimeIdentity,
   RuntimeIdentitySchema,
   RuntimeRegistrationSchema,
   RuntimeTransport,
   RUNTIME_NAMES,
 } from "project-runtime-contracts";
 
-// Check protocol compatibility.
-const myProtocol = ProtocolVersion.version;
-const minimum = ProtocolVersion.minimumSupported;
-
-// Identify your runtime.
-const identity: RuntimeIdentity = {
+const identity = RuntimeIdentitySchema.parse({
   runtime: RUNTIME_NAMES.ANANKE,
   version: "0.1.0",
-  protocolVersion: myProtocol,
-  minimumProtocolVersion: minimum,
+  protocolVersion: ProtocolVersion.version,
+  minimumProtocolVersion: ProtocolVersion.minimumSupported,
   capabilities: [
     {
       id: "approval",
@@ -89,11 +48,8 @@ const identity: RuntimeIdentity = {
       category: CapabilityCategory.Approval,
     },
   ],
-};
+});
 
-RuntimeIdentitySchema.parse(identity);
-
-// Register a runtime without coupling to its implementation.
 const registration = RuntimeRegistrationSchema.parse({
   identity,
   health: {
@@ -111,42 +67,19 @@ const registration = RuntimeRegistrationSchema.parse({
 });
 ```
 
-## Horae Readiness
+Documentation:
 
-The package now includes the contract surface needed for a future Horae orchestrator while staying runtime-neutral:
+- [Protocol specification](docs/protocol-specification.md)
+- [Version negotiation](docs/version-negotiation.md)
+- [Evolution policy](docs/evolution-policy.md)
+- [Contract ownership](docs/contract-ownership.md)
+- [Conformance](docs/conformance.md)
+- [Glossary](docs/glossary.md)
+- [Changelog](CHANGELOG.md)
+- [ADR index](docs/decisions/README.md)
 
-- `RuntimeIdentity` lets Ananke, Mnemosyne, Horae, gateways, and third-party runtimes answer "who are you?"
-- `RuntimeCapability` describes what a runtime can provide without requiring callers to know the implementation.
-- `RuntimeHealth` reports `healthy`, `busy`, `read_only`, `updating`, `unavailable`, and `degraded` states.
-- `RuntimeRegistration` describes endpoints, transport, health, and capability metadata for discovery.
-- `RuntimeProfile` captures operating modes such as strict enterprise, personal development, read-only, CI, production, testing, and autonomous.
-- `RuntimeSession` makes project, agent, task, profile, and runtime bindings first-class.
-- `RuntimeEvent` provides a shared event envelope for registration, health changes, approvals, memory updates, policy changes, and audit completion.
-- `RuntimeComposition` lets an orchestrator expose only the capabilities appropriate for a task-scoped operating context.
+Additional repository planning and history:
 
-These are contracts only. Horae can coordinate Ananke and Mnemosyne through these shapes later, but this package does not perform orchestration, routing, policy enforcement, memory retrieval, or persistence.
-
-## Trust and Isolation
-
-- `RuntimeSkill` describes portable skill provenance, declared capabilities, compatibility, requirements, and declared trust state.
-- `ExecutionEnvironment` describes the declared isolation level, provider, opaque filesystem scope, network-policy reference, and resource limits.
-- `RuntimeRiskClass` provides a shared serialized vocabulary for operational risk declarations.
-
-These declarations make capabilities observable and portable. They do not install skills, enforce policy, create sandboxes, or execute work.
-
-## Design Notes
-
-- Keep this package minimal: only types, enums, constants, and small runtime-agnostic helpers.
-- Export everything from `src/index.ts` so consumers can import from the package root.
-- Use string enums where values are serialized across IPC or the network.
-- Prefer capability-first contracts over runtime-specific coupling.
-- Consumers should ask for `approval`, `policy`, `memory`, `citation`, or `gateway` capabilities rather than hard-coding one runtime implementation.
-- Maintain a strict protocol change policy and bump `ProtocolVersion` for breaking changes.
-
-If this package becomes widely adopted, consider shortening the repository name, for example `runtime-contracts`, and publishing as an npm package, for example `@your-org/runtime-contracts`.
-
-## Planning
-
-- [Research additions](docs/PROJECT_RUNTIME_CONTRACTS_RESEARCH_ADDITIONS.md)
+- [Versioning notes and protocol history](docs/VERSIONING.md)
 - [Roadmap](docs/ROADMAP.md)
 - [Build plan](docs/BUILD_PLAN.md)

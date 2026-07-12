@@ -106,6 +106,36 @@ Exit criteria:
 - Conflicting, superseded, partially sourced, and invalid project records have explicit fixtures.
 - No persistence or retrieval assumptions appear in the public contract.
 
+## 1.7.0 - Content surface preflight contracts
+
+Goal: define a portable contract for inspecting untrusted files and document-like content before
+that content is exposed to an LLM, agent, tool, or persistent memory system, without embedding
+scanner implementations or policy engines in this package.
+
+- Add `ContentExposureLevel`, `ContentPreflightOutcome`, and `ContentRiskFlag`.
+- Define `ContentSourceIdentity`, `ContentSurfaceObservation`, `ContentAccessDecision`, and
+  `ContentPreflightReceipt`.
+- Keep observation, access decision, and emitted receipt separate so callers can distinguish
+  "what was seen", "what was allowed", and "what was actually surfaced".
+- Default untrusted-content flows to `DERIVED_ONLY` exposure and document that unsupported or
+  failed inspection outcomes must fail closed according to caller policy.
+- Require source content hashes on observations and preserve emitted-surface hashes for selected,
+  transformed, redacted, or truncated outputs.
+- Document that detector lexicons, private rules, and sensitive reason logic must not leak through
+  agent-readable reason codes or payload fields.
+- Add recommended capability identifiers for observation, structural inspection, metadata
+  inspection, selected extraction, full extraction, and receipt verification.
+
+Exit criteria:
+
+- The schemas reject missing source hashes, invalid outcomes, invalid exposure levels, and receipts
+  that do not bind to an observation and decision.
+- Fixtures cover pass, flagged pass, derived-only, quarantined, unsupported, resource-limit, and
+  inspection-failed outcomes.
+- Tests prove a failed or timed-out inspection cannot be represented as a clean pass.
+- Audit-oriented fixtures can correlate observation, decision, receipt, scanner identity, policy
+  version, and emitted-surface hash without adding scanning or approval runtime behaviour.
+
 ## 2.0.0 candidates
 
 Reserve breaking changes until real consumer feedback supports them:

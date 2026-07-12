@@ -1,0 +1,152 @@
+# Conformance
+
+This document separates what the repository already tests from additional evidence a
+third-party implementation should provide when claiming compatibility.
+
+## Conformance Goal
+
+A compatible implementation should be able to:
+
+- parse and emit the shared contract shapes it claims to support;
+- negotiate protocol versions using the same compatibility rules;
+- preserve required identifiers and timestamps;
+- respect the closed-versus-open value boundaries defined by the public schemas;
+- serialize and deserialize payloads without changing meaning;
+- handle generic success and error outcomes consistently.
+
+## Evidence Required For A Compatibility Claim
+
+Minimum evidence a third party should provide:
+
+1. Schema validation against every adopted public contract.
+2. Version-negotiation tests proving the same compatibility outcomes as the repository
+   helpers in [`src/protocol/ProtocolCompatibility.ts`](../src/protocol/ProtocolCompatibility.ts).
+3. Identifier tests proving required IDs are present where the shared schema requires them.
+4. Timestamp tests proving full ISO 8601 date-time handling where timestamp fields exist.
+5. Closed-enum tests proving unsupported serialized enum values are rejected.
+6. Open-string tests proving extension event names can still flow through `RuntimeEvent`.
+7. `Result<T>` tests proving success and failure branches cannot both be present.
+8. JSON round-trip tests for every public contract the implementation emits.
+
+## Unknown Fields And Unknown Values
+
+Current repository evidence:
+
+- tested object schemas strip unknown top-level fields during parsing;
+- closed enums reject unknown serialized values;
+- `RuntimeEvent.type` remains open for extension event namespaces;
+- capability IDs and many other identifiers remain open strings.
+
+Third-party implication:
+
+- do not rely on unknown top-level fields surviving a parse through the shared schemas;
+- do not assume every open string is semantically known just because it is syntactically valid.
+
+## Outcome Handling
+
+Implemented shared outcome behaviour:
+
+- `Result<T>` is the shared success/error envelope;
+- `RuntimeError` is the shared machine-readable error shape;
+- `AuditEvent` is the shared immutable audit-fact record.
+
+Not defined here:
+
+- domain-specific action outcome enums;
+- approval semantics;
+- memory reliability semantics;
+- runtime-specific retry policy beyond the `recoverable` boolean on `RuntimeError`.
+
+Compatibility claim guidance:
+
+- claim support for the generic envelope only if both `success` branches are handled;
+- do not claim support for another runtime's domain semantics unless that runtime's own
+  repository or ADRs define them.
+
+## Canonical Examples
+
+Current evidence-backed examples in the repository:
+
+- [`README.md`](../README.md) usage snippet
+- [`tests/sample-import.ts`](../tests/sample-import.ts)
+- inline examples in the exported source files under [`src/`](../src/)
+- schema tests under [`src/**/*.test.ts`](../src/)
+
+These are examples, not a formal fixture registry.
+
+## Implemented Test Coverage
+
+The repository currently has dedicated tests for:
+
+- `Timestamp` utilities and schema
+- `Result<T>` and `RuntimeError`
+- `Severity`
+- `RuntimeIdentity`
+- `Capability`
+- `RuntimeHealth`
+- `RuntimeMessage`
+- `RuntimeEvent`
+- `RuntimeComposition`
+- `RuntimeSession`
+- `RuntimeSkill`
+- `ExecutionEnvironment`
+- `RuntimeRiskClass`
+- `ProtocolCompatibility`
+- constants including `ProtocolVersion` value alignment
+
+Implemented but without a dedicated schema test file today:
+
+- `ProjectIdentity`
+- `RuntimeMetadata`
+- `RuntimeRegistration`
+- `RuntimeProfile`
+- `RuntimeKind`
+- `Version`
+
+Implication:
+
+- these contracts are implemented and exported, but their conformance evidence is weaker
+  than the families with explicit parse/negative/round-trip tests.
+
+## Proposed But Not Yet Implemented Conformance Evidence
+
+The roadmap and build plan reference future fixture work, but the repository does not yet
+contain the proposed `tests/fixtures/` structure.
+
+Proposed future evidence, not current repository reality:
+
+- canonical positive and negative fixture directories;
+- consumer-compatibility payload suites for Ananke, Mnemosyne, Horae, and Moira Code;
+- release-by-release conformance fixture baselines.
+
+Do not describe those fixture systems as already present.
+
+## Suggested Third-Party Test Matrix
+
+A third-party implementation should add, at minimum:
+
+- smallest valid payload for each adopted contract;
+- fully populated payload for each adopted contract;
+- missing-required-field failures;
+- invalid-timestamp failures;
+- invalid-enum failures;
+- unknown-field parse behaviour checks;
+- JSON round-trip checks;
+- protocol downgrade and incompatibility cases;
+- extension-event acceptance checks for `RuntimeEvent`;
+- negative `Result<T>` cases where both `data` and `error` appear.
+
+## Documentation Conflict
+
+The repository has stronger tests for some public families than others. A third-party
+implementation that claims "full protocol conformance" should either:
+
+- limit the claim to the actually tested families; or
+- add independent evidence for the currently under-tested exports.
+
+## Open Questions
+
+- No canonical fixture bundle exists yet.
+- No standardized wire payload exists for negotiation failure.
+- No repository-wide rule defines how unknown capability IDs should be surfaced to users or
+  policy systems after schema validation succeeds.

@@ -141,6 +141,26 @@ Keep a contract family in one module until its size or independent versioning ju
   they are portable protocol concepts.
 - Update memory event guidance and fixtures.
 
+### Slice G: content surface preflight (1.7.0)
+
+- Implement `ContentExposureLevel`, `ContentPreflightOutcome`, and `ContentRiskFlag` as stable
+  serialized vocabularies.
+- Define `ContentSourceIdentity` with a required `contentHash` and `sizeBytes`; keep source
+  location fields optional so local paths and URIs remain producer-specific declarations.
+- Implement `ContentSurfaceObservation`, `ContentAccessDecision`, and `ContentPreflightReceipt`
+  as separate records linked by identifiers rather than a single merged result object.
+- Require every decision to reference the exact observation it evaluated and every receipt to bind
+  back to the source content hash.
+- Represent selected, redacted, transformed, or truncated output with optional emitted-surface
+  hashes instead of embedding extraction logic in the contract.
+- Preserve `DERIVED_ONLY`, `QUARANTINED`, `UNSUPPORTED`, `RESOURCE_LIMIT_EXCEEDED`, and
+  `INSPECTION_FAILED` as first-class outcomes; do not collapse failure into a boolean pass/fail
+  field.
+- Treat reason codes as portable, non-sensitive declarations; do not encode detector lexicons,
+  private rule text, or policy internals in agent-readable payloads.
+- Add capability identifiers and fixture payloads for observation, metadata inspection, structural
+  inspection, selected extraction, full extraction, and receipt verification.
+
 ## 5. Test matrix
 
 Each schema test suite should cover:
@@ -155,6 +175,8 @@ Each schema test suite should cover:
 - numeric lower/upper boundaries;
 - the negative cases named in the research note;
 - compatibility parsing for representative existing payloads.
+- content preflight failures and timeouts that must not parse as a clean pass once the 1.7.0 slice
+  lands.
 
 Blocked skill registration should be tested at two layers: the shared schema accepts the declared
 `blocked` state, while consumer integration fixtures demonstrate that policy may refuse activation.
