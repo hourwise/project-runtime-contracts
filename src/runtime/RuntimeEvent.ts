@@ -31,6 +31,13 @@ export enum RuntimeEventType {
   RuntimeRegistered = "runtime.registered",
   SessionEnded = "session.ended",
   SessionStarted = "session.started",
+  LifecycleStateChanged = "lifecycle.state_changed",
+  LifecycleCancellationRequested = "lifecycle.cancellation_requested",
+  LifecycleTerminationRequested = "lifecycle.termination_requested",
+  LifecycleTerminationCompleted = "lifecycle.termination_completed",
+  LifecycleRecoveryStarted = "lifecycle.recovery_started",
+  LifecycleRecoveryCompleted = "lifecycle.recovery_completed",
+  ProviderModelChanged = "provider.model_changed",
 }
 
 /** Zod schema for core runtime event types. */
@@ -49,6 +56,13 @@ export const RuntimeEventTypeSchema = z.enum([
   RuntimeEventType.RuntimeRegistered,
   RuntimeEventType.SessionEnded,
   RuntimeEventType.SessionStarted,
+  RuntimeEventType.LifecycleStateChanged,
+  RuntimeEventType.LifecycleCancellationRequested,
+  RuntimeEventType.LifecycleTerminationRequested,
+  RuntimeEventType.LifecycleTerminationCompleted,
+  RuntimeEventType.LifecycleRecoveryStarted,
+  RuntimeEventType.LifecycleRecoveryCompleted,
+  RuntimeEventType.ProviderModelChanged,
 ]);
 
 /**

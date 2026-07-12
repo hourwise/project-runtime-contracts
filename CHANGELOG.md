@@ -9,19 +9,34 @@ it is not fabricated here.
 - Added a documentation set for protocol specification, version negotiation, evolution
   policy, ownership boundaries, conformance, glossary terms, and an ADR index.
 - Shortened the README so it links to the protocol documentation instead of duplicating it.
-- Recorded current documentation conflicts around Horae consumer status and
-  "Moira Code" versus "Moirae Code" naming.
+- Clarified source/schema discrepancies around event namespaces, audit correlation fields,
+  message-ID generation, and binding defaults.
+- Normalized documentation to the requested Moirae Code product name while retaining
+  `moira` as the stable serialized runtime identifier and recording the source-comment
+  naming conflict.
+- Reconciled the build plan and roadmap with the implemented, source-tested 1.2.0 surface
+  while retaining fixtures and external-consumer evidence as proposed work.
+- Added the protocol 1.3.0 lifecycle contract family: mandatory lifecycle correlation and
+  idempotency envelopes, lifecycle targets, operation-specific records, core event names, and
+  reduced observational heartbeats. Lifecycle execution policy remains external.
+- Added protocol 1.4.0 model/speech capability, portable locale, transcript, and immutable
+  provider/model-change contracts. Provider selection, recognition, routing, failover, and
+  confidence calculation remain external.
 
 ## Evidence-Backed History
 
 ### Current package state
 
-- [`package.json`](./package.json) currently declares package version `0.2.0`.
+- [`package.json`](./package.json) currently declares package version `0.4.0`.
 - [`src/protocol/ProtocolVersion.ts`](./src/protocol/ProtocolVersion.ts) currently declares
-  protocol `1.2.0` with `minimumSupported` `1.0.0`.
+  protocol `1.4.0` with `minimumSupported` `1.0.0`.
 
 ### Protocol milestones recorded in repository docs
 
+- `1.4.0` (unreleased): additive model/speech capabilities, portable transcript and locale
+  validation, and immutable provider/model-change records.
+- `1.3.0` (unreleased): additive lifecycle state, event, operation, target, and heartbeat
+  contracts with mandatory lifecycle correlation/idempotency envelopes.
 - `1.2.0`: additive contracts for portable skills, execution isolation, and shared runtime
   risk classes. Existing open-ended capability risk strings remain supported.
 - `1.1.0`: additive Horae-readiness contracts for runtime capabilities, health status,

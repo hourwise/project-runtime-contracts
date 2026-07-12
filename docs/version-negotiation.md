@@ -6,10 +6,10 @@ protocol versions, and capability advertisement.
 ## Package Version Versus Protocol Version
 
 - The npm package version is declared in [`package.json`](../package.json). It is currently
-  `0.2.0`.
+  `0.4.0`.
 - The protocol version is declared separately in
   [`src/protocol/ProtocolVersion.ts`](../src/protocol/ProtocolVersion.ts). It is currently:
-  - `version: "1.2.0"`
+  - `version: "1.4.0"`
   - `minimumSupported: "1.0.0"`
 - Package version changes and protocol version changes are related but not identical:
   one package release may publish additive protocol contracts without changing every
@@ -52,6 +52,10 @@ the highest compatible version or `null`.
 - if the ranges overlap, the negotiated version is the highest common version;
 - if the ranges do not overlap, negotiation fails with `null`.
 
+This symmetry belongs to the pure `negotiate(...)` helper only. `isCompatible(...)` is
+directional: it answers whether one runtime's range accepts a proposed version. Neither
+helper chooses a network initiator, host, registry, or discovery sequence.
+
 Example:
 
 ```ts
@@ -64,11 +68,11 @@ negotiate("1.2.0", "1.0.0", "1.1.0", "1.0.0");
 ## Supported Ranges
 
 The current repository state declares support for protocol versions from `1.0.0` through
-`1.2.0` inclusive.
+`1.4.0` inclusive.
 
 Implications:
 
-- a peer proposing `1.0.0`, `1.0.5`, `1.1.0`, or `1.2.0` can be compatible if the local
+- a peer proposing `1.0.0`, `1.0.5`, `1.1.0`, `1.2.0`, `1.3.0`, or `1.4.0` can be compatible if the local
   runtime also supports those ranges;
 - a peer proposing `0.9.9` is too old;
 - a peer proposing `2.0.0` is incompatible because the major version differs.
@@ -112,6 +116,10 @@ Current behaviour:
 - no shared registry or negotiation handshake decides whether an unknown capability ID
   should be ignored, hidden, mapped, or treated as an error.
 
+Capability advertisement is descriptive representation. It does not prove that a
+capability is currently callable, authorized, or available, and it does not select an
+execution path.
+
 Practical compatibility implication:
 
 - protocol negotiation can succeed while capability negotiation still requires local policy.
@@ -147,14 +155,18 @@ The following contract surfaces reject unknown serialized enum values:
 
 - `RuntimeEventTypeSchema` is closed to the built-in core values.
 - `RuntimeEventSchema` is intentionally open and accepts any non-empty `type` string,
-  including extension namespaces such as `com.example.custom_event`.
+  including values used as extension namespaces such as `com.example.custom_event`.
+- The object schema does not enforce the reverse-DNS-style extension convention described
+  in the `RuntimeEvent` source comment. Receivers must therefore not infer namespace
+  validity from successful schema validation.
 
 ## Optional-Field Evolution And Compatibility
 
 Current repository evidence supports this model:
 
 - new optional fields are the preferred additive mechanism in minor protocol releases;
-- existing consumers should tolerate omitted optional fields;
+- schemas accept omitted optional fields; consumers must not treat an omitted optional
+  field as present or assume an implied default;
 - tested schemas strip unknown top-level fields during parsing rather than preserving them.
 
 Compatibility consequence:
@@ -205,3 +217,6 @@ This is an open protocol question rather than established repository behaviour.
 - Negotiation precedence relative to discovery is not defined.
 - The repository does not define ownership of canonicalization for capability IDs, runtime
   names outside `RUNTIME_NAMES`, or endpoint URLs.
+- A source comment says a `RuntimeBinding.required` value defaults to `true`, but the
+  implementation does not apply a default. This is documented in the protocol
+  specification as a source/schema conflict, not a downgrade rule.

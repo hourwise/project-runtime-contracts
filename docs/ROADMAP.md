@@ -9,7 +9,9 @@ execution, persistence, browser, speech, or orchestration logic belongs here.
 ## Release principles
 
 - Define each public contract as a Zod schema and infer its TypeScript type from that schema.
-- Keep serialized values stable and use lower-case or namespaced string values consistently.
+- Keep serialized values stable. Preserve the established casing and namespace conventions
+  of each contract family; do not change existing serialized values merely for visual
+  consistency.
 - Make additive fields optional unless every existing producer can supply them.
 - Do not narrow an existing schema in a minor release.
 - Export every public contract from `src/index.ts`.
@@ -17,6 +19,11 @@ execution, persistence, browser, speech, or orchestration logic belongs here.
 - Update the package version, protocol version, protocol history, and migration notes as required.
 
 ## 1.2.0 - Trust, isolation, and risk vocabulary
+
+**Status: implemented and source-tested.** The implementation and release-validation record
+are in commit `6bc49e7`; the repository does not contain the planned canonical fixture
+directory or external consumer-compatibility suites. See [conformance](./conformance.md) for
+the current evidence boundary.
 
 Goal: let a runtime declare what may execute, where it may execute, and the risk attached
 to the operation without introducing an execution or policy engine.
@@ -34,27 +41,38 @@ Exit criteria:
 - Schemas and inferred types are exported from the package root.
 - Invalid versions, absent/empty skill sources, blocked-skill fixtures, unsupported isolation
   levels, invalid resource limits, and every risk value are covered by tests.
-- Existing consumers and fixtures continue to parse unchanged.
+- Existing source tests and documented samples continue to parse unchanged.
 
 ## 1.3.0 - Runtime lifecycle and recovery
+
+**Status: implemented and source-tested.** The contract shapes and focused tests are present;
+canonical fixture suites and external consumer-compatibility evidence are not yet present.
+The implementation defines representation and validation only, not lifecycle management.
 
 Goal: make runtime state transitions, cancellation, termination, and recovery observable
 across orchestrators without implementing lifecycle management.
 
 - Add `RuntimeLifecycleState`.
-- Define `RuntimeHeartbeat`, `RuntimeCancellationRequest`, `RuntimeTerminationRecord`, and
+- Define `RuntimeHeartbeat`, `RuntimeCancellationRecord`, `RuntimeTerminationRecord`, and
   `RuntimeRecoveryRecord` with stable identifiers, timestamps, correlation fields, and reasons.
-- Add lifecycle event names to `RuntimeEventType` while retaining the open string event envelope.
-- Specify valid producer expectations as documentation; do not encode a state machine in this package.
+- Add core lifecycle event names to `RuntimeEventType` while retaining the open string event
+  envelope.
+- Specify producer expectations as documentation; do not encode a state machine in this package.
 
 Exit criteria:
 
 - Cancellation, repeated/idempotent cancellation correlation, failure, termination, stale
-  heartbeat, and recovery fixtures are represented.
+  heartbeat, and recovery schema cases are covered by colocated tests. Canonical fixtures
+  remain proposed work.
 - Lifecycle records can be correlated with `RuntimeSession` and `RuntimeEvent` without requiring
   either record to contain runtime-specific state.
 
 ## 1.4.0 - Model and speech capability discovery
+
+**Status: implemented and source-tested.** The contract shapes and focused tests are present;
+canonical fixture suites and external consumer-compatibility evidence are not yet present.
+The implementation defines representation and validation only, not provider selection,
+recognition, routing, or failover behaviour.
 
 Goal: allow orchestration layers to select compatible model and speech providers from declared
 features rather than provider names.
@@ -69,8 +87,9 @@ features rather than provider names.
 Exit criteria:
 
 - Local, cloud, tool-capable, multimodal, streaming, full-duplex, and ambiguous-transcript
-  fixtures are covered.
-- Provider-switch events are backward-compatible with receivers that ignore unknown payload fields.
+  schema cases are covered by colocated tests. Canonical fixtures remain proposed work.
+- Provider/model change events use opaque identifiers and closed reasons; generic
+  `RuntimeEvent` receivers may still ignore unknown payload fields.
 
 ## 1.5.0 - Browser action evidence
 
@@ -154,4 +173,4 @@ Every release includes:
 - positive and negative schema tests;
 - migration notes and protocol history;
 - `npm run validate` and package-content verification;
-- a compatibility check against representative Ananke, Mnemosyne, Horae, and Moira Code payloads.
+- a compatibility check against representative Ananke, Mnemosyne, Horae, and Moirae Code payloads.

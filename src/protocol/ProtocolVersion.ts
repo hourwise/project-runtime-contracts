@@ -8,7 +8,7 @@
  * @example
  * ```ts
  * export const ProtocolVersion = {
- *   version: "1.2.0",
+ *   version: "1.4.0",
  *   minimumSupported: "1.0.0",
  * };
  * ```
@@ -31,7 +31,7 @@ export interface RuntimeProtocol {
  * @see VERSIONING.md for detailed compatibility rules.
  */
 export const ProtocolVersion: RuntimeProtocol = {
-  version: "1.2.0",
+  version: "1.4.0",
   minimumSupported: "1.0.0",
 };
 

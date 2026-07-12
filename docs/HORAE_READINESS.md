@@ -1,35 +1,47 @@
 # Horae Readiness
 
-Horae is treated here as a future orchestration plane, not as another gateway implementation.
+**Status: designed, not an implemented Horae integration.** Horae is treated here as a
+future orchestration plane, not as another gateway implementation.
 
-The contracts in this repository should let each runtime self-describe so Horae can compose a governed operating context without importing Ananke or Mnemosyne internals.
+The implemented contracts can represent runtime self-description and composition data that a
+future Horae implementation might use without importing Ananke or Mnemosyne internals. They
+do not require every runtime to publish every record, nor do they implement orchestration.
 
 ## Responsibilities
 
-- Ananke governs execution: policy, approval, audit, and typed outcomes.
-- Mnemosyne governs memory: knowledge, source references, reliability, retrieval, and citation.
-- Horae should govern attention: which runtimes, memories, policies, gateways, and capabilities are visible for a given session.
+- Ananke owns policy, approval, and action-outcome semantics for Ananke-governed actions.
+  `AuditEvent` is a shared record shape; the meaning of an audit event remains with its
+  producing runtime.
+- Mnemosyne owns memory, source-reference, retrieval, citation, context-pack, and
+  reliability semantics.
+- Horae owns orchestration and composition-selection semantics.
 
-## Contract Requirements
+These are ownership boundaries, not implemented behaviour in this package. See
+[contract ownership](./contract-ownership.md) for the evidence and limits of each assignment.
 
-- Every runtime exposes `RuntimeIdentity`.
-- Every runtime exposes capabilities using stable capability IDs and categories.
-- Every runtime can report `RuntimeHealth`.
-- Runtimes can publish `RuntimeRegistration` records for discovery.
-- Sessions use `RuntimeSession` so project, agent, task, and profile context are explicit.
-- Profiles use `RuntimeProfile` so strict enterprise, personal development, read-only, CI, production, testing, and autonomous modes can be selected without scattered config.
-- Cross-runtime state changes use `RuntimeEvent` instead of direct coupling.
-- A selected operating context is represented by `RuntimeComposition`.
+## Available Contract Shapes
 
-## Laws Of Horae
+- `RuntimeIdentity`, `Capability`, and `RuntimeHealth` can represent runtime declarations.
+- `RuntimeRegistration` can represent a record intended for discovery; no discovery protocol
+  or registry persistence is implemented.
+- `RuntimeSession` and `RuntimeProfile` can represent project, actor, task, and profile
+  context where a producer supplies it.
+- `RuntimeEvent` can represent cross-runtime events; delivery and coupling choices remain
+  external.
+- `RuntimeComposition` can represent a selected operating context; selection is not
+  performed here.
 
-- Right Context: an agent must operate inside the correct project, policy, memory, and capability context.
-- Minimal Surface: expose only capabilities needed for the current task.
-- Runtime Composition: gateways, memories, policies, tools, and approvals are composed explicitly.
-- No Silent Drift: runtime versions, policies, memories, and capabilities must be visible when they change.
-- Observable Passage: transitions between agent, gateway, runtime, memory, and tool should be traceable.
-- Replaceable Gateways: no contract assumes a single gateway implementation.
-- Progressive Disclosure: capabilities can remain hidden until they are appropriate for the task.
+## Design Principles
+
+- Right Context: a future Horae design may use project, policy, memory, and capability
+  context when composing a session.
+- Minimal Surface: a future policy may expose only the capabilities needed for a task.
+- Runtime Composition: the shared `RuntimeComposition` shape can name gateways, memories,
+  policies, tools, and approvals explicitly.
+- No Silent Drift and Observable Passage: a future system may use version declarations and
+  events as evidence, but the package provides no monitoring or delivery guarantees.
+- Replaceable Gateways and Progressive Disclosure: the shared shapes do not require a
+  particular gateway implementation or an immediate disclosure strategy.
 
 ## Non-Goals
 

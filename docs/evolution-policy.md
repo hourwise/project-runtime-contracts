@@ -8,7 +8,8 @@ logic. It reflects current repository rules and calls out unresolved questions e
 - Package versioning uses semantic versioning.
 - `ProtocolVersion` is tracked separately from the npm package version.
 - Breaking shared-protocol changes require a major protocol-version change.
-- Minor protocol releases are intended for additive, backward-compatible changes.
+- Minor protocol releases are intended for additive, backward-compatible changes except
+  where the change needs the explicit enum or union compatibility review below.
 - Patch releases are for documentation or other non-behavioural adjustments.
 
 These baseline rules are stated in [`docs/VERSIONING.md`](./VERSIONING.md),
@@ -29,6 +30,10 @@ Required discipline for additive changes:
 - new fields should be optional unless every supported producer can already provide them;
 - new shared contracts must be exported from [`src/index.ts`](../src/index.ts);
 - tests and migration notes should accompany the change.
+
+Adding a new exported enum type is different from adding a new member to an existing enum:
+the former does not widen an existing serialized value set, while the latter remains an
+open compatibility decision.
 
 ## Breaking Changes
 
@@ -136,6 +141,9 @@ Required migration artefacts for protocol changes:
 - a changelog entry in [`CHANGELOG.md`](../CHANGELOG.md);
 - migration guidance describing old and new payload expectations;
 - representative tests or examples showing the new accepted shapes.
+
+These are documentation-maintenance requirements. They are not automated by the package
+or its compatibility helpers.
 
 Not currently defined:
 

@@ -10,7 +10,16 @@ Status rules used in this repository:
 
 ## Accepted ADRs
 
-No accepted ADRs are currently present in the repository.
+- [ADR-0002: Model, Speech, and Portable Locale Contracts](./ADR-0002-model-speech-portable-locale.md)
+  Status: Accepted
+  Date: 2026-07-12
+  Scope: context-window tokens, transcript confidence, Portable Locale Profile, and immutable
+  provider/model-change records.
+- [ADR-0001: Lifecycle Correlation and Idempotency Envelope](./ADR-0001-lifecycle-correlation-idempotency.md)
+  Status: Accepted
+  Date: 2026-07-12
+  Scope: mandatory lifecycle event and operation envelopes, reduced heartbeat observations,
+  target representation, and idempotency scope.
 
 ## Proposed ADRs
 

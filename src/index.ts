@@ -15,6 +15,9 @@ export * from "./audit/AuditSeverity";
 export * from "./skill/RuntimeSkill";
 export * from "./isolation/ExecutionEnvironment";
 export * from "./risk/RuntimeRiskClass";
+export * from "./lifecycle/RuntimeLifecycle";
+export * from "./model/ModelCapability";
+export * from "./speech/Speech";
 
 // Runtimes
 export * from "./runtime/Capability";

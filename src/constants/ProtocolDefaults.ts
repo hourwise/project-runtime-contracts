@@ -14,7 +14,7 @@
 /**
  * Default protocol version when not explicitly specified.
  */
-export const DEFAULT_PROTOCOL_VERSION = "1.2.0";
+export const DEFAULT_PROTOCOL_VERSION = "1.4.0";
 
 /**
  * Default minimum supported protocol version.

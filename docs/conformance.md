@@ -28,6 +28,11 @@ Minimum evidence a third party should provide:
 7. `Result<T>` tests proving success and failure branches cannot both be present.
 8. JSON round-trip tests for every public contract the implementation emits.
 
+For the last item, a compatibility claimant must limit JSON round-trip claims to
+JSON-serializable payload values. `RuntimeMessage.payload`, `Result<T>` without a data
+schema, and record fields that use `z.unknown()` are not constrained to JSON by this
+package.
+
 ## Unknown Fields And Unknown Values
 
 Current repository evidence:
@@ -41,6 +46,8 @@ Third-party implication:
 
 - do not rely on unknown top-level fields surviving a parse through the shared schemas;
 - do not assume every open string is semantically known just because it is syntactically valid.
+- do not treat a valid non-empty `RuntimeEvent.type` as proof that it follows an extension
+  namespace convention; the schema does not validate that convention.
 
 ## Outcome Handling
 
@@ -91,6 +98,10 @@ The repository currently has dedicated tests for:
 - `RuntimeSkill`
 - `ExecutionEnvironment`
 - `RuntimeRiskClass`
+- lifecycle/recovery schemas: envelope, target, lifecycle event, cancellation, termination,
+  recovery, and heartbeat
+- model/speech schemas: context window, model capability profile, provider/model selection
+  change event, portable locale, transcript, and speech-provider capability
 - `ProtocolCompatibility`
 - constants including `ProtocolVersion` value alignment
 
@@ -116,7 +127,7 @@ contain the proposed `tests/fixtures/` structure.
 Proposed future evidence, not current repository reality:
 
 - canonical positive and negative fixture directories;
-- consumer-compatibility payload suites for Ananke, Mnemosyne, Horae, and Moira Code;
+- consumer-compatibility payload suites for Ananke, Mnemosyne, Horae, and Moirae Code;
 - release-by-release conformance fixture baselines.
 
 Do not describe those fixture systems as already present.
@@ -133,6 +144,11 @@ A third-party implementation should add, at minimum:
 - unknown-field parse behaviour checks;
 - JSON round-trip checks;
 - protocol downgrade and incompatibility cases;
+- required lifecycle-envelope failures, target-reference failures, lifecycle enum failures,
+  heartbeat ordering-field failures, and lifecycle JSON round trips;
+- finite positive context-window failures; confidence boundary failures; portable-locale
+  acceptance/rejection cases; transcript timing failures; provider/model initial, provider-only,
+  model-only, unchanged-selection, and envelope failures; and JSON identifier preservation;
 - extension-event acceptance checks for `RuntimeEvent`;
 - negative `Result<T>` cases where both `data` and `error` appear.
 

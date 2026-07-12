@@ -1,87 +1,75 @@
 # Contract Ownership
 
-This document maps semantic ownership across the runtime ecosystem. It distinguishes between
-what this repository owns as shared representation and what other runtimes or products own
-as domain meaning.
+This document distinguishes shared representation owned by this repository from the
+semantic decisions owned by the relevant runtime or product. It does not assign runtime
+behaviour to this package merely because the package exports a related schema or enum.
 
 ## Ownership Table
 
-| Semantic area | Owner | Evidence | Notes |
+| Semantic area | Owner | Evidence and status | Boundary |
 | --- | --- | --- | --- |
-| Shared interoperability shapes, schemas, enums, protocol vocabulary, version metadata, compatibility helpers | Project Runtime Contracts | [`README.md`](../README.md), [`package.json`](../package.json), [`src/index.ts`](../src/index.ts) | This repository owns representation, not runtime logic. |
-| Policy, approval, and execution-governance semantics | Project Ananke | [`docs/HORAE_READINESS.md`](./HORAE_READINESS.md), `RuntimeKind.Ananke`, `CapabilityCategory.Approval` / `Policy` | This repository provides shared envelopes such as `Result<T>`, `RuntimeEvent`, and `AuditEvent`, but not Ananke policy behaviour. |
-| Action-outcome meaning | Project Ananke for Ananke-governed actions; producing runtime for its own actions | [`docs/HORAE_READINESS.md`](./HORAE_READINESS.md), [`src/results/Result.ts`](../src/results/Result.ts) | The repository owns the generic success/error envelope, not the business meaning of each action outcome. |
-| Memory, source-reference, retrieval, citation, and reliability semantics | Project Mnemosyne | [`docs/HORAE_READINESS.md`](./HORAE_READINESS.md), `CapabilityCategory.Memory`, `CapabilityCategory.Citation` | Shared capability/category names live here; Mnemosyne behaviour does not. |
-| Context-pack semantics | Likely Project Mnemosyne, but terminology is under-specified in current evidence | [`README.md`](../README.md) excludes "Context packs or memory stores" from this repository; [`docs/HORAE_READINESS.md`](./HORAE_READINESS.md) assigns memory concerns to Mnemosyne | This is an evidence-backed ownership inference, not a first-class implemented contract term. |
-| Composition selection and orchestration context | Project Horae | [`docs/HORAE_READINESS.md`](./HORAE_READINESS.md), [`src/runtime/RuntimeComposition.ts`](../src/runtime/RuntimeComposition.ts), `RuntimeBindingRole.Orchestrator` | This repository owns the `RuntimeComposition` shape; Horae-owned policy decides which composition to create. |
-| Host or product behaviour for the `moira` runtime constant | Moira Code in current source terminology | [`src/constants/RuntimeNames.ts`](../src/constants/RuntimeNames.ts) | The constant comment says "Moira Code". The repository does not define product UX or host policy. |
-| Transport implementation behaviour | Producing runtime, host, or gateway | [`src/runtime/RuntimeRegistration.ts`](../src/runtime/RuntimeRegistration.ts) | The repository defines `RuntimeTransport` values and endpoint records only. |
-| Correlation-ID generation | Unassigned in current repository evidence | [`src/runtime/RuntimeMessage.ts`](../src/runtime/RuntimeMessage.ts), [`src/runtime/RuntimeEvent.ts`](../src/runtime/RuntimeEvent.ts) | The fields exist, but generation and uniqueness policy are not owned here. |
-| Canonicalization of paths, URLs, capability IDs, and metadata | Unassigned in current repository evidence | [`src/identity/ProjectIdentity.ts`](../src/identity/ProjectIdentity.ts), [`src/runtime/RuntimeMetadata.ts`](../src/runtime/RuntimeMetadata.ts), [`src/isolation/ExecutionEnvironment.ts`](../src/isolation/ExecutionEnvironment.ts) | The repository validates shape but does not define canonical forms. |
+| Shared interoperability shapes, schemas, enums, protocol vocabulary, version metadata, and compatibility helpers | Project Runtime Contracts | Implemented exports in [`src/index.ts`](../src/index.ts), the package description, and the README | This repository owns representation and validation, not runtime logic. |
+| Action-outcome semantics for Ananke-governed actions | Project Ananke | Documentation-pass authority boundary; [`Result<T>`](../src/results/Result.ts) only supplies the generic success/error envelope | This repository does not export an Ananke action-outcome vocabulary or policy engine. A different runtime owns the meaning of its own outcomes. |
+| Context-pack, memory, source-reference, retrieval, citation, and reliability semantics | Project Mnemosyne | Documentation-pass authority boundary; [`RuntimeSkill`](../src/skill/RuntimeSkill.ts) and `CapabilityCategory.Memory` are shared declarations only | No `ContextPack` or reliability contract is exported here. Mnemosyne ownership is a boundary assignment, not evidence of an implemented context-pack protocol. |
+| Composition selection and orchestration semantics | Project Horae | Documentation-pass authority boundary; [`RuntimeComposition`](../src/runtime/RuntimeComposition.ts) provides the shared record shape | The package does not create compositions, select bindings, or impose an orchestration lifecycle. Horae remains described as a future orchestration plane in [`HORAE_READINESS.md`](./HORAE_READINESS.md). |
+| Host and product behaviour associated with `RUNTIME_NAMES.MOIRA` | Moirae Code | Documentation-pass authority boundary; [`RuntimeNames.ts`](../src/constants/RuntimeNames.ts) establishes only the serialized identifier `moira` | The shared package defines neither product UX nor host policy. See the naming conflict below. |
+| Capability and profile semantics | Producing runtime or host | [`Capability`](../src/runtime/Capability.ts), [`RuntimeProfile`](../src/runtime/RuntimeProfile.ts) | The package represents declarations, categories, and references. It does not decide whether a capability is authorized, available, or executable. |
+| Lifecycle correlation, idempotency, and record representation | Project Runtime Contracts | [`RuntimeLifecycle.ts`](../src/lifecycle/RuntimeLifecycle.ts) | The package owns the shared envelope and validation only. Horae or another lifecycle engine owns transition legality, persistence, retries, and operation execution. |
+| Model/speech capability, portable transcript, locale, and provider/model-change representation | Project Runtime Contracts | [`ModelCapability.ts`](../src/model/ModelCapability.ts), [`Speech.ts`](../src/speech/Speech.ts) | The package owns representation and validation. Model selection, context management, confidence calculation, recognition, provider transport, routing, failover, and availability remain external. |
+| Transport implementation behaviour | Producing runtime, host, or gateway | [`RuntimeRegistration.ts`](../src/runtime/RuntimeRegistration.ts) | `RuntimeTransport` and `RuntimeEndpoint` are shapes only; no transport implementation or endpoint completeness rule is supplied. |
+| Correlation-ID and message-ID generation | Unassigned | [`RuntimeMessage.ts`](../src/runtime/RuntimeMessage.ts), [`RuntimeEvent.ts`](../src/runtime/RuntimeEvent.ts) | Fields are optional strings. The package has no generator, uniqueness rule, or cross-record enforcement. |
+| Canonicalization of paths, URLs, capability IDs, metadata, or serialization order | Unassigned | [`ProjectIdentity.ts`](../src/identity/ProjectIdentity.ts), [`RuntimeMetadata.ts`](../src/runtime/RuntimeMetadata.ts), [`ExecutionEnvironment.ts`](../src/isolation/ExecutionEnvironment.ts) | The schemas validate selected shapes; they do not define canonical forms or serialization ordering. |
 
 ## What This Repository Explicitly Does Not Own
 
-The current README explicitly keeps these concerns out of the shared contracts package:
+The README keeps these concerns out of the shared contracts package:
 
 - policy engines;
-- memory engines;
-- persistence stores;
-- database adapters;
-- retrieval and reliability scoring;
-- context packs or memory stores;
+- orchestration logic;
+- memory systems, context packs, retrieval, and reliability scoring;
+- persistence and database adapters;
 - gateway implementations;
-- Horae orchestration logic.
+- provider transport; and
+- host/product behaviour.
 
 Source: [`README.md`](../README.md)
 
 ## Shared Representation Versus Domain Meaning
 
-The key boundary is:
+The shared contracts preserve enough structure for runtimes to exchange records. They do
+not make the records' domain effect a package-level decision. For example:
 
-- this repository owns shared shape and validation;
-- the producing runtime or product owns behavioural meaning.
-
-Examples:
-
-- `RuntimeEvent` owns the shared event envelope, but the meaning of
-  `payload.reason === "auto_approved"` belongs to the emitter.
-- `RuntimeComposition` owns the shape of an orchestration decision, but not the policy that
-  decided to expose or hide a capability.
-- `Result<T>` owns the success/error envelope, but not whether a particular approval,
+- `Result<T>` describes a success/error envelope; it does not decide whether an approval,
   retrieval, or execution should succeed.
+- `RuntimeComposition` describes bindings; it does not decide which runtimes or
+  capabilities should be bound.
+- `RuntimeEvent` describes an event envelope; an event payload's meaning remains with its
+  producer or extension owner.
+- `RuntimeRiskClass` and `SkillTrustState` are declarations; neither enforces a policy.
 
 ## Documentation Conflicts
 
-### Moira Code versus Moirae Code
+### Moirae Code naming
 
-Repository source currently uses `moira` as the canonical runtime constant and describes it
-as the host application or client runtime, informally "Moira Code", in
-[`src/constants/RuntimeNames.ts`](../src/constants/RuntimeNames.ts).
+This documentation uses **Moirae Code** for the host/product boundary, as specified for
+this documentation pass. The stable serialized runtime identifier remains `moira`.
 
-Conflicting prose:
+[`RuntimeNames.ts`](../src/constants/RuntimeNames.ts) currently calls that host application
+"Moira Code" in a source comment. That comment is code documentation and cannot be changed
+in this documentation-only pass. It is therefore a remaining source/documentation naming
+conflict, not a reason to rename the `moira` identifier.
 
-- [`docs/ADR-XXXX-runtime-contracts-content-surface-preflight.md`](./ADR-XXXX-runtime-contracts-content-surface-preflight.md)
-  also refers to "Moirae Code".
+### Consumer status
 
-Current documentation set uses "Moira Code" when referring to the implemented `moira`
-runtime constant and reports the conflicting prose rather than silently rewriting history.
-
-### Horae And Moira Consumer Status
-
-Current evidence is inconsistent about whether Horae and Moira Code are current consumers or
-future/planned ecosystem projects:
-
-- [`README.md`](../README.md) previously listed them as current and future consumers.
-- [`docs/HORAE_READINESS.md`](./HORAE_READINESS.md) describes Horae as a future
-  orchestration plane.
-- [`package.json`](../package.json) description names only Ananke and Mnemosyne.
-
-The concise README now names only the consumers that are consistently evidenced across
-package metadata, examples, and source. The broader ecosystem references remain documented
-here as a conflict rather than a silently resolved fact.
+The current README and package description name Project Ananke and Project Mnemosyne as
+consumers. They do not establish Project Horae or Moirae Code as current consumers.
+`HORAE_READINESS.md` calls Horae a future orchestration plane. References to Horae or Moirae
+Code in examples, proposals, and roadmaps are not evidence of current consumption.
 
 ## Open Questions
 
-- Whether "context pack" should be formalized as a Mnemosyne-owned public contract term.
-- Whether negotiation should be explicitly owned by the host/product, by each peer runtime,
-  or by a future orchestration layer.
+- Whether a `ContextPack` should become an explicit Mnemosyne-owned public contract.
+- Whether negotiation is operationally owned by a host/product, peer runtimes, or a future
+  orchestration layer.
+- Whether reliability needs shared representation at all, or should remain solely
+  Mnemosyne semantics.

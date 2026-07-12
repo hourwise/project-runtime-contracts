@@ -60,69 +60,31 @@ export interface ExecutionEnvironment {
 
 ## Lifecycle contracts
 
-```ts
-export type RuntimeLifecycleState =
-  | "registered"
-  | "initialising"
-  | "ready"
-  | "busy"
-  | "waiting"
-  | "degraded"
-  | "cancelling"
-  | "terminated"
-  | "failed";
-```
+**Status: implemented in protocol 1.3.0.** This research sketch is superseded by
+[`RuntimeLifecycle.ts`](../src/lifecycle/RuntimeLifecycle.ts) and
+[ADR-0001](./decisions/ADR-0001-lifecycle-correlation-idempotency.md).
 
-Potential records:
-- `RuntimeHeartbeat`
-- `RuntimeCancellationRequest`
-- `RuntimeTerminationRecord`
-- `RuntimeRecoveryRecord`
+The implemented surface is `RuntimeLifecycleState`, `RuntimeLifecycleEvent`,
+`RuntimeHeartbeat`, `RuntimeCancellationRecord`, `RuntimeTerminationRecord`, and
+`RuntimeRecoveryRecord`. Lifecycle commands and events use the mandatory correlation and
+idempotency envelope; heartbeats use the reduced observational envelope. The package does
+not implement state-transition policy or lifecycle execution.
 
 ## Model capability contracts
 
-```ts
-export interface ModelCapabilityProfile {
-  provider: string;
-  modelId: string;
-  contextWindow?: number;
-  supportsTools: boolean;
-  supportsVision: boolean;
-  supportsStructuredOutput: boolean;
-  supportsReasoningControls?: boolean;
-  supportsLocalExecution?: boolean;
-  supportsStreamingAudio?: boolean;
-  supportsFullDuplexAudio?: boolean;
-}
-```
+**Status: implemented in protocol 1.4.0.** This research sketch is superseded by
+[`ModelCapability.ts`](../src/model/ModelCapability.ts) and
+[ADR-0002](./decisions/ADR-0002-model-speech-portable-locale.md).
+
+The implemented `ModelCapabilityProfile` uses opaque `providerId` and `modelId` identifiers.
+`contextWindow` is an optional finite positive integer measured in native model tokens.
 
 ## Speech contracts
 
-```ts
-export interface TranscriptAlternative {
-  text: string;
-  confidence?: number;
-}
-
-export interface TranscriptSegment {
-  text: string;
-  startMs: number;
-  endMs: number;
-  confidence?: number;
-  locale?: string;
-  alternatives?: TranscriptAlternative[];
-  requiresConfirmation: boolean;
-}
-
-export interface SpeechProviderCapability {
-  mode: "on-device" | "local-service" | "cloud";
-  streaming: boolean;
-  fullDuplex: boolean;
-  supportedLocales: string[];
-  returnsConfidence: boolean;
-  interruptionSupport: boolean;
-}
-```
+**Status: implemented in protocol 1.4.0.** `TranscriptAlternative`, `TranscriptSegment`, and
+`SpeechProviderCapability` are defined in [`Speech.ts`](../src/speech/Speech.ts). Confidence
+is optional within `0..1`, and `locale` plus `supportedLocales` use the Portable Locale
+Profile. `producerLocaleLabel` keeps opaque producer labels separate from portable locales.
 
 ## Browser-action contracts
 

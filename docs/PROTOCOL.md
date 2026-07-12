@@ -1,15 +1,25 @@
 # Protocol Overview
 
-This document captures the high-level protocol and conventions used by runtimes that implement these contracts.
+This page is a navigation summary, not a second protocol specification. The public surface
+is defined by the exports in [`src/index.ts`](../src/index.ts); the detailed, evidence-based
+description is in [protocol specification](./protocol-specification.md).
 
-- Versioning: semantic major changes are breaking; minor and patch changes are backwards compatible.
-- Messages: runtime-to-runtime messages use the `RuntimeMessage` shape.
-- Error handling: `Result<T>` and `RuntimeError` are the canonical error/result shapes.
-- Identity: each runtime should expose `RuntimeIdentity` so orchestrators can identify runtime name, implementation version, protocol version, minimum supported protocol, capabilities, and metadata.
-- Capabilities: runtimes should describe capability IDs and categories rather than requiring callers to know implementation-specific package names.
-- Health: runtimes should report `RuntimeHealth` with a coarse status such as `healthy`, `busy`, `read_only`, `updating`, `unavailable`, or `degraded`.
-- Registration: runtimes can publish `RuntimeRegistration` records containing identity, health, endpoints, capabilities, and profile metadata.
-- Profiles and sessions: orchestrators can use `RuntimeProfile`, `RuntimeSession`, and `RuntimeComposition` to expose only the capabilities appropriate to the current project, agent, task, and risk context.
-- Events: cross-runtime notifications should use `RuntimeEvent` for registration, health changes, approval decisions, memory updates, policy changes, gateway failures, and audit completion.
+- `RuntimeIdentity`, `RuntimeRegistration`, `Capability`, `RuntimeHealth`, and
+  `RuntimeProfile` are implemented shared record shapes. Their use in discovery, policy,
+  or execution is not imposed by this package.
+- `RuntimeMessage`, `RuntimeEvent`, `Result<T>`, `RuntimeError`, and `AuditEvent` are
+  implemented envelope or record shapes. This package does not define transport, message
+  ordering, delivery, retry, or domain outcome semantics.
+- `RuntimeSession` and `RuntimeComposition` represent session and composition data. They do
+  not perform orchestration or determine capability exposure.
+- `RuntimeLifecycleEvent`, lifecycle operation records, and `RuntimeHeartbeat` represent
+  correlated lifecycle data. They do not implement a state machine, idempotency store, retry
+  system, or lifecycle executor.
+- Model/speech capability profiles, portable transcript records, and provider/model-change
+  events represent declarations and observed changes. They do not select models, recognize
+  speech, calculate confidence, route requests, or perform failover.
+- `ProtocolVersion` and the compatibility helpers represent and compare supported protocol
+  ranges. No standard wire negotiation exchange is implemented.
 
-Expand this file as protocol features are finalized and as cross-runtime needs emerge.
+For the rules that govern changes, see [evolution policy](./evolution-policy.md). For
+implemented versus proposed third-party evidence, see [conformance](./conformance.md).

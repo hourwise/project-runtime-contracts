@@ -1,8 +1,60 @@
 # Research Additions Build Plan
 
-This plan implements the staged work in [`ROADMAP.md`](./ROADMAP.md). It covers the additions
+This plan records the staged work in [`ROADMAP.md`](./ROADMAP.md). It covers the additions
 proposed in [`PROJECT_RUNTIME_CONTRACTS_RESEARCH_ADDITIONS.md`](./PROJECT_RUNTIME_CONTRACTS_RESEARCH_ADDITIONS.md)
 without adding runtime behaviour.
+
+## Current Status
+
+### 1.2.0: implemented and source-tested
+
+The 1.2.0 implementation is present in the current repository and was recorded as
+release-validated in commit `6bc49e7`. The following completed slices have direct source and
+test evidence:
+
+- Slice A: `RuntimeRiskClass` and `RuntimeRiskClassSchema` in
+  [`src/risk/RuntimeRiskClass.ts`](../src/risk/RuntimeRiskClass.ts), with exhaustive-value,
+  invalid-value, and JSON round-trip tests.
+- Slice B: `RuntimeSkill`, `SkillSource`, `SkillKind`, `SkillTrustState`,
+  `ExecutionEnvironment`, `IsolationLevel`, and `ResourceLimits`, exported from
+  [`src/index.ts`](../src/index.ts) and covered by colocated tests.
+- The package and protocol values are `0.2.0` and `1.2.0` respectively, as recorded in
+  [`CHANGELOG.md`](../CHANGELOG.md).
+
+The repository does **not** currently contain the proposed `tests/fixtures/` directory,
+consumer-compatibility payload suites, or a formal external consumer conformance record.
+Those are planned evidence requirements, not completed 1.2.0 artefacts. See
+[conformance](./conformance.md) for the implemented-versus-proposed distinction.
+
+### 1.3.0: implemented and source-tested
+
+The lifecycle contract family is implemented in
+[`src/lifecycle/RuntimeLifecycle.ts`](../src/lifecycle/RuntimeLifecycle.ts) and covered by
+colocated tests. It makes the correlation and idempotency envelope mandatory for lifecycle
+events and cancellation, termination, and recovery records, while using the documented
+reduced observational envelope for heartbeats. The accepted boundary is recorded in
+[ADR-0001](./decisions/ADR-0001-lifecycle-correlation-idempotency.md).
+
+As with 1.2.0, canonical fixtures and external consumer-compatibility payload suites are not
+yet present. The 1.3.0 implementation does not provide lifecycle execution or transition
+policy.
+
+### 1.4.0: implemented and source-tested
+
+The model and speech contract families are implemented in
+[`src/model/ModelCapability.ts`](../src/model/ModelCapability.ts) and
+[`src/speech/Speech.ts`](../src/speech/Speech.ts), with focused tests for context capacity,
+confidence, portable locales, transcripts, speech capabilities, and provider/model changes.
+The accepted portable locale and provider-change boundary is recorded in
+[ADR-0002](./decisions/ADR-0002-model-speech-portable-locale.md). The implementation does not
+select models, recognize speech, calculate confidence, route requests, or perform failover.
+
+Canonical fixtures and external consumer-compatibility payload suites remain proposed work.
+
+### 1.5.0 through 1.7.0: proposed
+
+The model/speech, browser, memory, and content-surface slices below are planning material. No
+public implementation status should be inferred from their presence here.
 
 ## 1. Confirm contract decisions
 
@@ -16,15 +68,12 @@ Before implementing each release, record the decisions that affect wire compatib
 - event names and payload ownership;
 - package and protocol version impact.
 
-Resolve these research ambiguities before coding:
+Resolve these research ambiguities before coding the relevant future slice:
 
 - A valid `SkillSource` must contain which minimum locator or publisher fields?
 - Is a blocked skill valid data that consumers reject by policy, or invalid registration data?
   Preferred answer: valid data; this package validates shape, not policy.
 - Are filesystem scopes paths, patterns, or opaque runtime-specific selectors?
-- Which lifecycle record fields are required for idempotency and correlation?
-- Are model context windows expressed in tokens, and are `0` values ever valid?
-- Are confidence values normalized to the inclusive range `0..1`?
 - Must browser evidence references be URIs, content hashes, or opaque IDs?
 - What is the smallest useful `ProjectRecord` envelope shared by Mnemosyne and other consumers?
 
@@ -38,6 +87,19 @@ Resolve these research ambiguities before coding:
 - `ExecutionEnvironment.filesystemScope` contains non-empty opaque selectors. A selector may
   represent a path or pattern according to the producing runtime, but this protocol does not
   define or interpret a shared filesystem-expression language.
+
+### 1.3.0 decision (2026-07-12)
+
+- Lifecycle events and operation records require the accepted correlation, idempotency, and
+  ordering envelope. Heartbeats use the reduced observational envelope. See
+  [ADR-0001](./decisions/ADR-0001-lifecycle-correlation-idempotency.md).
+
+### 1.4.0 decision (2026-07-12)
+
+- `contextWindow` is an optional positive integer in native model tokens, confidence is
+  optional within `0..1`, locales use the Portable Locale Profile, and provider/model changes
+  use the immutable correlated event defined in
+  [ADR-0002](./decisions/ADR-0002-model-speech-portable-locale.md).
 
 ## 2. Use the repository's schema pattern
 
@@ -89,17 +151,18 @@ tests/
 ```
 
 Keep a contract family in one module until its size or independent versioning justifies splitting it.
+The `tests/fixtures/` entries are proposed; they are not present in the current tree.
 
 ## 4. Delivery sequence
 
-### Slice A: shared primitives
+### Slice A: shared primitives (implemented in 1.2.0)
 
 - Implement `RuntimeRiskClass` and any reusable bounded-number, URI/reference, or resource-limit
   schemas that remain genuinely generic.
 - Avoid a generic helper when its semantics belong to only one contract family.
 - Add exhaustive enum tests and JSON round-trip tests.
 
-### Slice B: skills and isolation (1.2.0)
+### Slice B: skills and isolation (implemented in 1.2.0)
 
 - Implement `SkillKind`, `SkillTrustState`, `SkillSource`, and `RuntimeSkill`.
 - Import the existing `RuntimeCapabilitySchema` for `declaredCapabilities`.
@@ -108,23 +171,29 @@ Keep a contract family in one module until its size or independent versioning ju
 - Implement `IsolationLevel`, resource limits, and `ExecutionEnvironment`.
 - Require positive CPU/memory/timeout values where numeric validation is possible; retain string
   CPU declarations only if consumers need forms such as `500m`.
-- Add boundary and partial-declaration fixtures.
+- Future conformance work: add canonical boundary and partial-declaration fixtures. These
+  fixtures are not yet present.
 
-### Slice C: lifecycle (1.3.0)
+### Slice C: lifecycle and recovery (implemented in 1.3.0)
 
-- Finalize the four lifecycle record shapes before adding their event names.
-- Reuse `ISO8601TimestampSchema` and established session/correlation conventions.
-- Test serialization and shape validation, not legal transition execution.
-- Update `docs/PROTOCOL.md` with event and correlation guidance.
+- `RuntimeLifecycleEvent`, cancellation, termination, recovery, and heartbeat records use
+  the decided correlation and idempotency envelopes.
+- `ISO8601TimestampSchema` is reused for all lifecycle timestamps.
+- Colocated tests cover shape validation, required envelope fields, target validation, value
+  enums, and JSON round trips; they do not test legal transitions or lifecycle execution.
+- [`protocol-specification.md`](./protocol-specification.md) defines the idempotency scope,
+  target scope, and generic-event boundary.
 
-### Slice D: model and speech (1.4.0)
+### Slice D: model and speech (implemented in 1.4.0)
 
-- Implement model capability flags with optional fields for capabilities that cannot be declared
-  consistently by every provider.
-- Implement transcript and speech schemas with non-negative timings, `endMs >= startMs`, confidence
-  bounds, locale conventions, and explicit `requiresConfirmation`.
-- Add the provider-switch event and fixture payload.
-- Do not add provider adapters or availability probing.
+- Model capability flags distinguish required common declarations from optional declarations
+  that a provider may not expose consistently.
+- Transcript and speech schemas enforce finite non-negative timings, `endMs >= startMs`,
+  confidence bounds, Portable Locale Profile validation, and explicit
+  `requiresConfirmation`.
+- Provider/model changes use the specialized immutable correlated event; canonical fixture
+  payloads remain proposed work.
+- No provider adapters, availability probing, model selection, or failover behaviour is added.
 
 ### Slice E: browser evidence (1.5.0)
 
@@ -186,16 +255,22 @@ Blocked skill registration should be tested at two layers: the shared schema acc
 For each release:
 
 1. Update `README.md` usage only for stable, public additions.
-2. Update `docs/PROTOCOL.md` with wire semantics and extension behaviour.
+2. Update [`protocol-specification.md`](./protocol-specification.md) with wire semantics
+   and extension behaviour.
 3. Add a migration note, even when the release is additive.
 4. Update `docs/VERSIONING.md` and `ProtocolVersion` when the shared protocol changes.
 5. Run `npm run validate`.
 6. Inspect `npm pack --dry-run` to confirm declarations and compiled modules are included.
 7. Test the packed artifact from a minimal consumer import.
-8. Verify at least one Ananke and one Mnemosyne payload; add Horae/Moira fixtures when available.
+8. Verify at least one Ananke and one Mnemosyne payload; add Horae/Moirae Code fixtures when
+   available.
 
 ## Definition of done
 
-A roadmap item is complete only when its schema, inferred type, package-root export, tests, fixtures,
-wire documentation, migration note, version decision, and packed-consumer check are complete. A type
-snippet alone is not a delivered contract.
+For future roadmap items, completion requires schema, inferred type, package-root export,
+tests, fixtures, wire documentation, migration note, version decision, and packed-consumer
+check. A type snippet alone is not a delivered contract.
+
+This forward-looking definition must not be read as evidence that every criterion has a
+historical fixture or external-consumer record for 1.2.0; the status section above records
+the evidence that currently exists.

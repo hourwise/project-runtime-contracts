@@ -14,7 +14,9 @@ capabilities, health, and other shared protocol metadata. Repository evidence:
 A client or host application participating in runtime interactions. Current source evidence
 appears in [`src/constants/RuntimeNames.ts`](../src/constants/RuntimeNames.ts), where the
 well-known `moira` runtime is described as the host application or client runtime,
-informally "Moira Code".
+informally "Moira Code." This documentation uses **Moirae Code** for the product boundary
+specified for this documentation pass; the `moira` serialized identifier is unchanged.
+See the documented naming conflict in [contract ownership](./contract-ownership.md).
 
 ## Capability
 
@@ -65,19 +67,22 @@ structured `details`.
 
 A repository-external memory/context term that appears only in prose today. The README
 explicitly lists "Context packs or memory stores" as out of scope for this package. The
-current docs suggest this area belongs with Mnemosyne semantics, but there is no public
-`ContextPack` contract in this repository yet.
+documentation ownership boundary assigns its semantics to Project Mnemosyne, but there is
+no public `ContextPack` contract in this repository yet.
 
 ## Protocol Version
 
 The shared interoperability version range represented by `ProtocolVersion.version` and
-`ProtocolVersion.minimumSupported`. It is separate from the npm package version.
+`ProtocolVersion.minimumSupported`. It is separate from the npm package version. The
+negotiation helpers accept numeric `major.minor.patch` strings; `RuntimeProtocol` itself is
+only an interface with string fields.
 
 ## Correlation Identifier
 
 An optional string used to link related messages or events across runtimes. It appears in
 `RuntimeMessage.correlationId` and `RuntimeEvent.correlationId`. The repository does not
-define how such identifiers are generated or whether they are globally unique.
+define how such identifiers are generated, whether they are globally unique, or whether a
+recipient must echo one in a response.
 
 ## Connector
 
@@ -88,8 +93,9 @@ public contract in the repository source. Related implemented terms are `Runtime
 ## Model Broker
 
 A component that would select or route between model providers. This term is not currently
-represented by a public contract in the repository. The roadmap mentions future model
-capability discovery work, but no `ModelBroker` or equivalent export exists today.
+represented by a public `ModelBroker` contract in the repository. `ModelCapabilityProfile`
+and `RuntimeProviderModelChangedEvent` represent declarations and observed effective changes,
+but they do not select or route providers.
 
 ## Open Questions
 
