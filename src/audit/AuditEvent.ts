@@ -1,6 +1,8 @@
 import { z } from "zod";
 import { SeveritySchema, Severity } from "../results/Severity";
 import { ISO8601TimestampSchema } from "../utils/Timestamp";
+import { PrincipalIdentitySchema } from "../identity/Principal";
+import { AuditReferenceSchema } from "../protocol/References";
 
 /**
  * Audit event recording a significant occurrence in a runtime.
@@ -38,11 +40,20 @@ import { ISO8601TimestampSchema } from "../utils/Timestamp";
  * ```
  */
 export const AuditEventSchema = z.object({
+  id: z.string().min(1).optional(),
   timestamp: ISO8601TimestampSchema,
   runtime: z.string().min(1, "Runtime identifier is required"),
   event: z.string().min(1, "Event type is required"),
   severity: SeveritySchema,
   details: z.record(z.unknown()).optional(),
+  correlationId: z.string().min(1).optional(),
+  causationId: z.string().min(1).optional(),
+  sessionId: z.string().min(1).optional(),
+  projectId: z.string().min(1).optional(),
+  tenantId: z.string().min(1).optional(),
+  actor: PrincipalIdentitySchema.optional(),
+  auditReference: AuditReferenceSchema.optional(),
+  metadata: z.record(z.unknown()).optional(),
 });
 
 export type AuditEvent = z.infer<typeof AuditEventSchema>;

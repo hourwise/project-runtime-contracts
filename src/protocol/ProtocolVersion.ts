@@ -1,3 +1,31 @@
+import { z } from "zod";
+
+/** A strict, transport-independent semantic version. */
+export const SemanticVersionSchema = z
+  .string()
+  .regex(/^\d+\.\d+\.\d+$/, "Version must use major.minor.patch form");
+
+export type SemanticVersion = z.infer<typeof SemanticVersionSchema>;
+
+/** A closed protocol range advertised by a runtime. */
+export const ProtocolVersionRangeSchema = z
+  .object({
+    minimum: SemanticVersionSchema,
+    maximum: SemanticVersionSchema,
+  })
+  .superRefine((range, context) => {
+    const parse = (value: string) => value.split(".").map(Number);
+    const minimum = parse(range.minimum);
+    const maximum = parse(range.maximum);
+    if (minimum[0] !== maximum[0]) {
+      context.addIssue({ code: z.ZodIssueCode.custom, path: ["maximum"], message: "A protocol range cannot span major versions" });
+    } else if (minimum[1] > maximum[1] || (minimum[1] === maximum[1] && minimum[2] > maximum[2])) {
+      context.addIssue({ code: z.ZodIssueCode.custom, path: ["maximum"], message: "Protocol range maximum must not be lower than minimum" });
+    }
+  });
+
+export type ProtocolVersionRange = z.infer<typeof ProtocolVersionRangeSchema>;
+
 /**
  * Protocol version and compatibility information.
  *

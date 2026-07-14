@@ -38,6 +38,20 @@ export enum CapabilityExposure {
   Active = "active",
 }
 
+export enum CapabilityDependencyState {
+  Available = "available",
+  Degraded = "degraded",
+  Unavailable = "unavailable",
+  Unknown = "unknown",
+}
+
+export const CapabilityDependencyStateSchema = z.enum([
+  CapabilityDependencyState.Available,
+  CapabilityDependencyState.Degraded,
+  CapabilityDependencyState.Unavailable,
+  CapabilityDependencyState.Unknown,
+]);
+
 /** Zod schema for CapabilityCategory enum values. */
 export const CapabilityCategorySchema = z.enum([
   CapabilityCategory.Approval,
@@ -107,6 +121,9 @@ export const CapabilitySchema = z.object({
   tags: z.array(z.string()).optional(),
   requiresApproval: z.boolean().optional(),
   riskClass: z.string().optional(),
+  endpointId: z.string().min(1).optional(),
+  requiredProtocolFeatures: z.array(z.string().min(1)).min(1).optional(),
+  dependencyState: CapabilityDependencyStateSchema.optional(),
   metadata: z.record(z.unknown()).optional(),
 });
 
@@ -114,4 +131,3 @@ export type Capability = z.infer<typeof CapabilitySchema>;
 
 export const RuntimeCapabilitySchema = CapabilitySchema;
 export type RuntimeCapability = Capability;
-

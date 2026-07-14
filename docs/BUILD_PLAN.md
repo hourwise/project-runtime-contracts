@@ -6,6 +6,19 @@ without adding runtime behaviour.
 
 ## Current Status
 
+### Canonical contract consolidation: implemented in working tree, unreleased
+
+The consolidation pass adds source-tested portable principal/context, resource-scope,
+correlation/reference, delegation, idempotency, opaque state-handle, readiness, and
+compatibility-manifest shapes. It also adds ownership, distribution, migration, and design
+gate documentation, a packed-consumer smoke test, and minimal CI. The package and protocol
+version values remain `0.4.0` and `1.4.0`; no published release is claimed until an explicit
+version/release decision is recorded.
+
+These additions do not implement authentication, credential brokering, policy enforcement,
+workflow orchestration, memory/reliability semantics, transport, persistence, or host
+behaviour. Sibling repositories remain local-schema consumers pending explicit migration.
+
 ### 1.2.0: implemented and source-tested
 
 The 1.2.0 implementation is present in the current repository and was recorded as

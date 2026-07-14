@@ -1,6 +1,7 @@
 // Identities
 export * from "./identity/RuntimeIdentity";
 export * from "./identity/ProjectIdentity";
+export * from "./identity/Principal";
 
 // Results and errors
 export * from "./results/Result";
@@ -31,10 +32,16 @@ export * from "./runtime/RuntimeRegistration";
 export * from "./runtime/RuntimeSession";
 export * from "./runtime/Version";
 export * from "./runtime/RuntimeKind";
+export * from "./runtime/RuntimeReadiness";
 
 // Protocol
 export * from "./protocol/ProtocolVersion";
 export * from "./protocol/ProtocolCompatibility";
+export * from "./protocol/Correlation";
+export * from "./protocol/References";
+export * from "./protocol/CompatibilityManifest";
+export * from "./scope/ResourceScope";
+export * from "./delegation/Delegation";
 
 // Constants
 export * from "./constants";

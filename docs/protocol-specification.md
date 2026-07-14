@@ -112,7 +112,7 @@ Semantic owner: this repository for shape; runtime-specific identity meaning rem
 
 | Contract | Required fields | Optional fields | Invariants |
 | --- | --- | --- | --- |
-| `RuntimeIdentity` | `runtime`, `version`, `protocolVersion` | `minimumProtocolVersion`, `kind`, `instanceId`, `displayName`, `capabilities`, `metadata` | required strings must be non-empty |
+| `RuntimeIdentity` | `runtime`, `version`, `protocolVersion` | `minimumProtocolVersion`, `packageVersion`, `buildVersion`, `supportedProtocolRange`, `optionalIntegrations`, `requiredIntegrations`, `standalone`, `kind`, `instanceId`, `displayName`, `capabilities`, `metadata` | required strings must be non-empty |
 | `ProjectIdentity` | `id`, `name`, `rootPath` | none | required strings must be non-empty |
 | `RuntimeMetadata` | none | `displayName`, `description`, `homepageUrl`, `repositoryUrl`, `documentationUrl`, `labels`, `annotations` | no URL normalization is performed |
 
@@ -169,9 +169,9 @@ producing runtime, and profile policy remains outside this package.
 
 | Contract | Required fields | Optional fields | Invariants |
 | --- | --- | --- | --- |
-| `Capability` / `RuntimeCapability` | `id`, `name`, `version` | `description`, `category`, `exposure`, `tags`, `requiresApproval`, `riskClass`, `metadata` | required strings must be non-empty |
+| `Capability` / `RuntimeCapability` | `id`, `name`, `version` | `description`, `category`, `exposure`, `tags`, `requiresApproval`, `riskClass`, `endpointId`, `requiredProtocolFeatures`, `dependencyState`, `metadata` | required strings must be non-empty |
 | `RuntimeEndpoint` | `transport` | `id`, `url`, `command`, `args`, `protocol`, `metadata` | `transport` is a closed enum |
-| `RuntimeRegistration` | `identity` | `capabilities`, `health`, `endpoints`, `registeredAt`, `expiresAt`, `profileIds`, `metadata` | timestamps must parse if present |
+| `RuntimeRegistration` | `identity` | `capabilities`, `health`, `readiness`, `endpoints`, `registeredAt`, `expiresAt`, `profileIds`, `healthEndpoint`, `readinessEndpoint`, `inspectionMechanism`, `optionalIntegrations`, `requiredIntegrations`, `standalone`, `degradedModes`, `metadata` | timestamps must parse if present |
 | `RuntimeProfile` | `id`, `name` | `description`, `mode`, `discoveryMode`, `requiredCapabilities`, `exposedCapabilities`, `hiddenCapabilities`, `runtimeNames`, `gatewayProfileId`, `policyProfileId`, `memoryProfileId`, `approvalProfileId`, `auditProfileId`, `budget`, `metadata` | required strings must be non-empty |
 | `SessionBudget` | none | `maxDurationMs`, `maxToolCalls`, `maxWriteActions`, `maxApprovalRequests` | non-negative integers only |
 
@@ -232,7 +232,7 @@ an orchestration decision, not the decision logic itself.
 
 | Contract | Required fields | Optional fields | Invariants |
 | --- | --- | --- | --- |
-| `RuntimeSession` | `id`, `startedAt` | `profileId`, `project`, `agent`, `task`, `runtimeIds`, `expiresAt`, `metadata` | required strings non-empty; timestamps must parse |
+| `RuntimeSession` | `id`, `startedAt` | `profileId`, `project`, `agent`, `task`, `runtimeIds`, `expiresAt`, `executionContext`, `tenantId`, `workspaceId`, `metadata` | required strings non-empty; timestamps must parse |
 | `RuntimeActor` | none | `id`, `name`, `kind` | descriptive only |
 | `RuntimeTask` | none | `id`, `summary`, `riskClass`, `requiredCapabilities` | descriptive only |
 | `RuntimeBinding` | `role`, `runtime` | `capabilityIds`, `required`, `metadata` | `runtime` non-empty; `role` closed enum |
@@ -383,8 +383,8 @@ event payload semantics remain with the producing runtime or extension namespace
 
 | Contract | Required fields | Optional fields | Invariants |
 | --- | --- | --- | --- |
-| `RuntimeMessage` | `type` | `id`, `payload`, `sender`, `timestamp`, `correlationId` | `type` non-empty; timestamp must parse if present |
-| `RuntimeEvent` | `id`, `type`, `timestamp`, `sourceRuntime` | `targetRuntime`, `sessionId`, `correlationId`, `payload` | required strings non-empty |
+| `RuntimeMessage` | `type` | `id`, `payload`, `sender`, `timestamp`, `correlationId`, `requestId`, `causationId`, `actionId`, `approvalReference`, `delegationReference`, `auditReference` | `type` non-empty; timestamp must parse if present |
+| `RuntimeEvent` | `id`, `type`, `timestamp`, `sourceRuntime` | `targetRuntime`, `sessionId`, `correlationId`, `requestId`, `causationId`, `actionId`, `approvalReference`, `delegationReference`, `auditReference`, `payload` | required strings non-empty |
 | `RuntimeEventType` | closed core event names | none | reserved core values only when validating against the enum schema |
 
 Lifecycle:
@@ -447,10 +447,10 @@ domain-specific outcome remains with the producing runtime.
 
 | Contract | Required fields | Optional fields | Invariants |
 | --- | --- | --- | --- |
-| `Result<T>` | `success` plus exactly one of `data` or `error` | none | `success: true` requires `data`; `success: false` requires `error` |
+| `Result<T>` | `success` plus exactly one of `data` or `error` | `requestId`, `correlationId`, `causationId`, `auditReference`, `stateHandleReference` | `success: true` requires `data`; `success: false` requires `error` |
 | `RuntimeError` | `code`, `message`, `recoverable` | `details` | required strings non-empty |
 | `Severity` / `AuditSeverity` | closed enum values | none | one of `info`, `warning`, `error`, `critical` |
-| `AuditEvent` | `timestamp`, `runtime`, `event`, `severity` | `details` | timestamp must parse; required strings non-empty |
+| `AuditEvent` | `timestamp`, `runtime`, `event`, `severity` | `id`, `details`, `correlationId`, `causationId`, `sessionId`, `projectId`, `tenantId`, `actor`, `auditReference`, `metadata` | timestamp must parse; required strings non-empty |
 
 Lifecycle:
 
@@ -698,8 +698,9 @@ The schema and tests describe the implemented contract:
 
 - [`RuntimeBindingSchema`](../src/runtime/RuntimeComposition.ts) makes `required` optional
   and does not apply a default, although its source comment says "default true".
-- [`AuditEventSchema`](../src/audit/AuditEvent.ts) has no `correlationId` or `sessionId`
-  fields, although its source comment discusses both as audit-correlation fields.
+- `AuditEventSchema` now includes additive `id`, correlation, session, actor, and audit
+  reference fields, resolving the earlier source-comment/schema mismatch. Generation and
+  cross-record uniqueness remain outside this package.
 - [`RuntimeEventSchema`](../src/runtime/RuntimeEvent.ts) accepts every non-empty event type.
   Its source comment recommends a reverse-DNS-style extension namespace, but the schema
   and tests do not enforce that convention.
@@ -715,3 +716,37 @@ The schema and tests describe the implemented contract:
 - The repository does not define canonicalization rules for runtime names beyond the
   exported constants, nor for paths, URLs, labels, or metadata values.
 - The safety of future enum widening is not settled; see [evolution-policy.md](./evolution-policy.md).
+
+## Canonical identity, scope, correlation, and delegation families
+
+These additive families are implemented in the consolidation pass and are intentionally
+implementation-free.
+
+| Contract | Producer | Consumer | Required fields | Semantic owner and invariants |
+| --- | --- | --- | --- | --- |
+| `PrincipalIdentity` | host/runtime | peers and audit tooling | `id`, `kind` | identity is descriptive; no authority is inferred; `kind` is closed |
+| `ExecutionContext` | host/runtime | participating runtimes | authenticated and acting principals, `runtimeId`, `sessionId` | both principals are explicit; authentication and representation policy remain external |
+| `ResourceScope` | delegating runtime/host | policy and receiving runtime | `mode` | bounded mode needs a boundary; unscoped mode has none; wildcard syntax is rejected |
+| `CorrelationContext` | emitting runtime | peers/audit tooling | `requestId`, `correlationId` | identifiers are opaque non-empty references; generation and uniqueness are producer-owned |
+| `DelegationRequest` | requester | authority owner | request/context/audience/scope/purpose/time plus one capability/tool/operation reference | shape only; no grant issuance or enforcement |
+| `DelegationDescriptor` | authority owner | receiving runtime/audit tooling | grant, principals, audience, scope, purpose, session, validity interval plus one capability/tool/operation reference | expiry follows `expiresAt > issuedAt`; meaning of failure reasons belongs to authority owner |
+| `RuntimeReadiness` | runtime | host/discovery | `ready`, `status` | ready and `not_ready` cannot contradict; readiness is distinct from process health |
+| `CompatibilityManifest` | runtime/package | host, registry, conformance tooling | runtime/package identity, optional client identity, version/range identity, package range, `standalone` | protocol fields must agree with the advertised range; manifest does not negotiate or discover |
+| `StateHandleReference` | state-owning runtime | peers and audit tooling | `handleId` | opaque pointer only; it is not state, authority, or a persistence API |
+
+Unknown object fields continue to be stripped by the plain Zod objects. Closed enum values
+are rejected. Open identifiers and metadata remain syntactically representable without a
+registry lookup. Unknown tagged-union variants and future enum safety remain design gates.
+
+`IdempotencyPolicy` is a declaration with `none`, `single_use`, and `bounded_replay` modes.
+The latter requires a positive `maxUses`; enforcement, replay storage, and retry decisions
+remain with Ananke or the runtime that owns the operation.
+
+## Generic outcome and audit references
+
+`Result<T>` remains the shared success/error envelope. Its optional request, correlation,
+causation, and audit references do not assign action-outcome semantics. `AuditEvent` now
+has additive identity and reference fields; the emitting runtime remains authoritative for
+the audit fact. Ananke owns governed action outcomes, Mnemosyne owns context-pack and
+reliability meaning, Horae owns composition semantics, and Moirae Code owns host/product
+behaviour. See the [ownership matrix](./contract-ownership-matrix.md).

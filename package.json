@@ -25,6 +25,7 @@
     "test:watch": "vitest",
     "validate": "npm run clean && npm run typecheck && npm run test && npm run build && npm run pack:check",
     "pack:check": "npm pack --dry-run",
+    "pack:smoke": "node scripts/packed-consumer-smoke.mjs",
     "prepublishOnly": "npm run build"
   },
   "keywords": [

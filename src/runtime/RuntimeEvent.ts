@@ -108,6 +108,12 @@ export const RuntimeEventSchema = z.object({
   targetRuntime: z.string().optional(),
   sessionId: z.string().optional(),
   correlationId: z.string().optional(),
+  requestId: z.string().min(1).optional(),
+  causationId: z.string().min(1).optional(),
+  actionId: z.string().min(1).optional(),
+  approvalReference: z.string().min(1).optional(),
+  delegationReference: z.string().min(1).optional(),
+  auditReference: z.string().min(1).optional(),
   payload: z.record(z.unknown()).optional(),
 });
 

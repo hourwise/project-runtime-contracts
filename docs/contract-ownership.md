@@ -4,6 +4,8 @@ This document distinguishes shared representation owned by this repository from 
 semantic decisions owned by the relevant runtime or product. It does not assign runtime
 behaviour to this package merely because the package exports a related schema or enum.
 
+The detailed consolidated family mapping is in the [canonical contract ownership matrix](./contract-ownership-matrix.md).
+
 ## Ownership Table
 
 | Semantic area | Owner | Evidence and status | Boundary |
@@ -17,7 +19,7 @@ behaviour to this package merely because the package exports a related schema or
 | Lifecycle correlation, idempotency, and record representation | Project Runtime Contracts | [`RuntimeLifecycle.ts`](../src/lifecycle/RuntimeLifecycle.ts) | The package owns the shared envelope and validation only. Horae or another lifecycle engine owns transition legality, persistence, retries, and operation execution. |
 | Model/speech capability, portable transcript, locale, and provider/model-change representation | Project Runtime Contracts | [`ModelCapability.ts`](../src/model/ModelCapability.ts), [`Speech.ts`](../src/speech/Speech.ts) | The package owns representation and validation. Model selection, context management, confidence calculation, recognition, provider transport, routing, failover, and availability remain external. |
 | Transport implementation behaviour | Producing runtime, host, or gateway | [`RuntimeRegistration.ts`](../src/runtime/RuntimeRegistration.ts) | `RuntimeTransport` and `RuntimeEndpoint` are shapes only; no transport implementation or endpoint completeness rule is supplied. |
-| Correlation-ID and message-ID generation | Unassigned | [`RuntimeMessage.ts`](../src/runtime/RuntimeMessage.ts), [`RuntimeEvent.ts`](../src/runtime/RuntimeEvent.ts) | Fields are optional strings. The package has no generator, uniqueness rule, or cross-record enforcement. |
+| Correlation-ID and message-ID generation | Producer runtime/host | [`Correlation.ts`](../src/protocol/Correlation.ts), [`RuntimeMessage.ts`](../src/runtime/RuntimeMessage.ts), [`RuntimeEvent.ts`](../src/runtime/RuntimeEvent.ts) | `CorrelationContext` requires request and correlation IDs; legacy message/event fields remain optional. The package has no generator, uniqueness rule, or cross-record enforcement. |
 | Canonicalization of paths, URLs, capability IDs, metadata, or serialization order | Unassigned | [`ProjectIdentity.ts`](../src/identity/ProjectIdentity.ts), [`RuntimeMetadata.ts`](../src/runtime/RuntimeMetadata.ts), [`ExecutionEnvironment.ts`](../src/isolation/ExecutionEnvironment.ts) | The schemas validate selected shapes; they do not define canonical forms or serialization ordering. |
 
 ## What This Repository Explicitly Does Not Own

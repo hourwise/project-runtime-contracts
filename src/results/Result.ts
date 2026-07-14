@@ -1,5 +1,6 @@
 import { z } from "zod";
 import { RuntimeErrorSchema, RuntimeError } from "./RuntimeError";
+import { AuditReferenceSchema, StateHandleReferenceSchema } from "../protocol/References";
 
 /**
  * Discriminated union representing the outcome of a runtime operation.
@@ -22,8 +23,8 @@ import { RuntimeErrorSchema, RuntimeError } from "./RuntimeError";
  * ```
  */
 export type Result<T> =
-  | { success: true; data: T; error?: never }
-  | { success: false; data?: never; error: RuntimeError };
+  | { success: true; data: T; error?: never; requestId?: string; correlationId?: string; causationId?: string; auditReference?: z.infer<typeof AuditReferenceSchema>; stateHandleReference?: z.infer<typeof StateHandleReferenceSchema> }
+  | { success: false; data?: never; error: RuntimeError; requestId?: string; correlationId?: string; causationId?: string; auditReference?: z.infer<typeof AuditReferenceSchema>; stateHandleReference?: z.infer<typeof StateHandleReferenceSchema> };
 
 /**
  * Result schema factory that creates a Zod schema enforcing the discriminated union invariant.
@@ -45,11 +46,21 @@ export const createResultSchema = <T extends z.ZodTypeAny>(
       success: z.literal(true),
       data: dataSchema || z.any(),
       error: z.never().optional(),
+      requestId: z.string().min(1).optional(),
+      correlationId: z.string().min(1).optional(),
+      causationId: z.string().min(1).optional(),
+      auditReference: AuditReferenceSchema.optional(),
+      stateHandleReference: StateHandleReferenceSchema.optional(),
     }),
     z.object({
       success: z.literal(false),
       data: z.never().optional(),
       error: RuntimeErrorSchema,
+      requestId: z.string().min(1).optional(),
+      correlationId: z.string().min(1).optional(),
+      causationId: z.string().min(1).optional(),
+      auditReference: AuditReferenceSchema.optional(),
+      stateHandleReference: StateHandleReferenceSchema.optional(),
     }),
   ]);
 

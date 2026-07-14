@@ -5,6 +5,8 @@ import {
   isCompatible,
   selectBestVersion,
   negotiate,
+  negotiateDetailed,
+  ProtocolNegotiationFailureReason,
 } from "./ProtocolCompatibility";
 
 describe("Protocol Compatibility Utilities", () => {
@@ -169,6 +171,22 @@ describe("Protocol Compatibility Utilities", () => {
         expect(negotiate("1.0.0", "1.0.0", "invalid", "1.0.0")).toBeNull();
         expect(negotiate("1.0.0", "1.0.0", "1.0.0", "invalid")).toBeNull();
       });
+    });
+  });
+
+  describe("negotiateDetailed", () => {
+    it("reports a negotiated overlap", () => {
+      expect(negotiateDetailed("1.2.0", "1.0.0", "1.1.0", "1.0.0")).toEqual({ compatible: true, negotiatedVersion: "1.1.0" });
+    });
+    it("reports malformed, invalid, major, and non-overlap failures", () => {
+      const malformed = negotiateDetailed("bad", "1.0.0", "1.0.0", "1.0.0");
+      const invalidRange = negotiateDetailed("1.0.0", "1.1.0", "1.0.0", "1.0.0");
+      const major = negotiateDetailed("2.0.0", "2.0.0", "1.0.0", "1.0.0");
+      const noOverlap = negotiateDetailed("1.1.0", "1.1.0", "1.0.0", "1.0.0");
+      expect(malformed).toEqual({ compatible: false, reason: ProtocolNegotiationFailureReason.MalformedVersion });
+      expect(invalidRange).toEqual({ compatible: false, reason: ProtocolNegotiationFailureReason.InvalidRange });
+      expect(major).toEqual({ compatible: false, reason: ProtocolNegotiationFailureReason.UnsupportedMajor });
+      expect(noOverlap).toEqual({ compatible: false, reason: ProtocolNegotiationFailureReason.NoOverlap });
     });
   });
 

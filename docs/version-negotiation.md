@@ -187,6 +187,11 @@ Implemented forms:
 - `selectBestVersion(...)` returns `null` when no compatible candidate exists;
 - `negotiate(...)` returns `null` when the supported ranges do not overlap.
 
+The additive `negotiateDetailed(...)` helper returns either `{ compatible: true,
+negotiatedVersion }` or `{ compatible: false, reason }`. Reasons are limited to
+`malformed_version`, `invalid_range`, `unsupported_major`, and `no_overlap`. This is a
+representation for callers; it does not prescribe an HTTP/MCP error envelope.
+
 Not implemented:
 
 - a standard `RuntimeMessage` negotiation request or failure reply shape;
@@ -207,6 +212,15 @@ Not specified today:
   of registration.
 
 This is an open protocol question rather than established repository behaviour.
+
+## Compatibility manifests and capability negotiation
+
+`CompatibilityManifestSchema` records supported ranges, the required package range,
+optional/required integrations, transports, capabilities, standalone status, constraints,
+degraded modes, and tested peers. It is descriptive evidence, not a discovery handshake.
+Capability IDs remain open strings; `CapabilityDependencyState` can describe an observed
+availability state but does not authorize execution. No shared algorithm currently maps
+capabilities to providers or tools.
 
 ## Open Questions
 

@@ -42,6 +42,12 @@ export const RuntimeMessageSchema = z.object({
   sender: z.string().optional(),
   timestamp: ISO8601TimestampSchema.optional(),
   correlationId: z.string().optional(),
+  requestId: z.string().min(1).optional(),
+  causationId: z.string().min(1).optional(),
+  actionId: z.string().min(1).optional(),
+  approvalReference: z.string().min(1).optional(),
+  delegationReference: z.string().min(1).optional(),
+  auditReference: z.string().min(1).optional(),
 });
 
 export type RuntimeMessage = z.infer<typeof RuntimeMessageSchema>;

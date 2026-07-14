@@ -2,6 +2,7 @@ import { z } from "zod";
 import { RuntimeIdentitySchema } from "../identity/RuntimeIdentity";
 import { CapabilitySchema } from "./Capability";
 import { RuntimeHealthSchema } from "./RuntimeHealth";
+import { RuntimeReadinessSchema } from "./RuntimeReadiness";
 import { RuntimeMetadataSchema } from "./RuntimeMetadata";
 import { ISO8601TimestampSchema } from "../utils/Timestamp";
 
@@ -109,11 +110,19 @@ export const RuntimeRegistrationSchema = z.object({
   identity: RuntimeIdentitySchema,
   capabilities: z.array(CapabilitySchema).optional(),
   health: RuntimeHealthSchema.optional(),
+  readiness: RuntimeReadinessSchema.optional(),
   endpoints: z.array(RuntimeEndpointSchema).optional(),
   registeredAt: ISO8601TimestampSchema.optional(),
   expiresAt: ISO8601TimestampSchema.optional(),
   profileIds: z.array(z.string()).optional(),
   metadata: RuntimeMetadataSchema.optional(),
+  healthEndpoint: z.string().min(1).optional(),
+  readinessEndpoint: z.string().min(1).optional(),
+  inspectionMechanism: z.string().min(1).optional(),
+  optionalIntegrations: z.array(z.string().min(1)).min(1).optional(),
+  requiredIntegrations: z.array(z.string().min(1)).min(1).optional(),
+  standalone: z.boolean().optional(),
+  degradedModes: z.array(z.string().min(1)).min(1).optional(),
 });
 
 export type RuntimeEndpoint = z.infer<typeof RuntimeEndpointSchema>;

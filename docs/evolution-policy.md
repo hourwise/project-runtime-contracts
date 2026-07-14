@@ -171,3 +171,16 @@ or date, the changelog should say so rather than inventing one.
 - The safety classification of new closed-enum members is still unresolved.
 - The repository does not define whether unknown future union variants should be ignored,
   rejected, or surfaced as opaque data.
+
+## Consolidation additions
+
+The identity, scope, correlation, delegation, readiness, and manifest schemas in the
+current working tree are additive fields and new exports. They do not change the required
+fields of existing contracts. A release that includes them must record the package/protocol
+version decision in the changelog; this working tree does not claim a published release or
+invent a support window.
+
+The closed `PrincipalKind`, readiness, dependency-state, and delegation-failure enums still
+require explicit review before widening. `ResourceScope` rejects wildcard syntax because no
+shared wildcard semantics have been accepted. Unknown union variants remain a design gate
+rather than an implicit ignore-or-reject rule.

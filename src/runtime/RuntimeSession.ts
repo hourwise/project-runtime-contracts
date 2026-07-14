@@ -2,6 +2,7 @@ import { z } from "zod";
 import { ProjectIdentitySchema } from "../identity/ProjectIdentity";
 import { RuntimeMetadataSchema } from "./RuntimeMetadata";
 import { ISO8601TimestampSchema } from "../utils/Timestamp";
+import { ExecutionContextSchema } from "../identity/Principal";
 
 /**
  * Actor involved in a runtime session (user, agent, or system).
@@ -89,6 +90,9 @@ export const RuntimeSessionSchema = z.object({
   startedAt: ISO8601TimestampSchema,
   expiresAt: ISO8601TimestampSchema.optional(),
   metadata: RuntimeMetadataSchema.optional(),
+  executionContext: ExecutionContextSchema.optional(),
+  tenantId: z.string().min(1).optional(),
+  workspaceId: z.string().min(1).optional(),
 });
 
 export type RuntimeActor = z.infer<typeof RuntimeActorSchema>;

@@ -97,6 +97,39 @@ represented by a public `ModelBroker` contract in the repository. `ModelCapabili
 and `RuntimeProviderModelChangedEvent` represent declarations and observed effective changes,
 but they do not select or route providers.
 
+## Principal
+
+An identified human, service, agent, or runtime represented by `PrincipalIdentity`. Identity
+is descriptive; it is not proof of authentication or authority.
+
+## Execution Context
+
+The cross-runtime application context represented by `ExecutionContext`. It requires an
+authenticated principal, an acting principal, a runtime identifier, and a session ID; it is
+separate from any MCP transport session.
+
+## Resource Scope
+
+An explicit `ResourceScope` declaration. `bounded` carries at least one boundary and
+`unscoped` carries none. Wildcard syntax has no portable semantics and is rejected.
+
+## Delegation
+
+A grant-shaped request or descriptor connecting principals, audience, purpose, capabilities,
+scope, session, and validity interval. The shared package does not issue, sign, store,
+revoke, or enforce a grant.
+
+## Compatibility Manifest
+
+The descriptive `CompatibilityManifest` record advertising versions, ranges, integrations,
+transports, capabilities, constraints, degraded modes, and tested peers. It is not a
+discovery or negotiation algorithm.
+
+## State Handle
+
+An opaque `StateHandleReference` pointing to state owned by another runtime. It carries no
+state contents, authority, persistence guarantee, or lifecycle operation.
+
 ## Open Questions
 
 - Whether "context pack" should be formalized as a Mnemosyne-owned public contract term.

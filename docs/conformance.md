@@ -166,3 +166,17 @@ implementation that claims "full protocol conformance" should either:
 - No standardized wire payload exists for negotiation failure.
 - No repository-wide rule defines how unknown capability IDs should be surfaced to users or
   policy systems after schema validation succeeds.
+
+## Consolidated contract evidence
+
+The current source tests additionally cover principal/context requirements, bounded versus
+unscoped scopes, wildcard rejection, delegation references and temporal invariants,
+correlation identifiers, protocol-range consistency, compatibility-manifest parsing, and
+machine-readable negotiation failure reasons. These tests demonstrate schema behaviour;
+they do not demonstrate authentication, authorization, grant issuance, host orchestration,
+transport negotiation, storage, or sibling-repository adoption.
+
+For a third-party claim covering these families, add fixtures for both principal roles,
+scope boundaries, expired grants, unknown open identifiers, closed enum failures, manifest
+range drift, idempotency-mode invariants, opaque state handles, and the four negotiation failure reasons. Preserve JSON round trips for every
+record actually emitted.

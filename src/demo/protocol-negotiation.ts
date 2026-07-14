@@ -2,6 +2,7 @@ import {
   CapabilityCategory,
   CapabilityExposure,
   ProtocolVersion,
+  isCompatible as isProtocolVersionCompatible,
   RuntimeCompositionSchema,
   RuntimeIdentity,
   RuntimeIdentitySchema,
@@ -18,7 +19,11 @@ console.log(`Minimum supported: ${ProtocolVersion.minimumSupported}`);
 
 // Demonstrate protocol compatibility check.
 function isCompatible(remoteVersion: string): boolean {
-  return remoteVersion >= ProtocolVersion.minimumSupported;
+  return isProtocolVersionCompatible(
+    ProtocolVersion.version,
+    ProtocolVersion.minimumSupported,
+    remoteVersion,
+  );
 }
 
 console.log(`\nRemote says v1.0.0 compatible? ${isCompatible("1.0.0")}`);

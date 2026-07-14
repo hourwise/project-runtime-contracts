@@ -6,6 +6,7 @@
  * - Minor version changes are additive and backward-compatible
  * - Patch version changes are non-breaking
  */
+import { z } from "zod";
 
 /**
  * Parse a semantic version string into components.
@@ -98,6 +99,14 @@ export function isCompatible(
       return false;
     }
 
+    if (compareVersions(minimumSupportedVersion, runtimeVersion) > 0) {
+      return false;
+    }
+
+    if (minimum.major !== runtime.major) {
+      return false;
+    }
+
     // Major versions must match
     if (proposed.major !== runtime.major) {
       return false;
@@ -177,6 +186,15 @@ export function negotiate(
       return null;
     }
 
+    if (compareVersions(runtime1MinimumSupported, runtime1Version) > 0 ||
+        compareVersions(runtime2MinimumSupported, runtime2Version) > 0) {
+      return null;
+    }
+
+    if (m1.major !== v1.major || m2.major !== v2.major) {
+      return null;
+    }
+
     // Must have same major version
     if (v1.major !== v2.major) {
       return null;
@@ -201,5 +219,55 @@ export function negotiate(
   } catch {
     return null;
   }
+}
+
+/** Explicit reasons allow a host to report negotiation failure without inventing transport errors. */
+export enum ProtocolNegotiationFailureReason {
+  MalformedVersion = "malformed_version",
+  InvalidRange = "invalid_range",
+  UnsupportedMajor = "unsupported_major",
+  NoOverlap = "no_overlap",
+}
+
+export const ProtocolNegotiationFailureReasonSchema = z.enum([
+  ProtocolNegotiationFailureReason.MalformedVersion,
+  ProtocolNegotiationFailureReason.InvalidRange,
+  ProtocolNegotiationFailureReason.UnsupportedMajor,
+  ProtocolNegotiationFailureReason.NoOverlap,
+]);
+
+export const ProtocolNegotiationResultSchema = z.discriminatedUnion("compatible", [
+  z.object({ compatible: z.literal(true), negotiatedVersion: z.string().regex(/^\d+\.\d+\.\d+$/) }),
+  z.object({ compatible: z.literal(false), reason: ProtocolNegotiationFailureReasonSchema, details: z.string().optional() }),
+]);
+
+export type ProtocolNegotiationResult = z.infer<typeof ProtocolNegotiationResultSchema>;
+
+/** Negotiation result with a stable, machine-readable incompatibility reason. */
+export function negotiateDetailed(
+  runtime1Version: string,
+  runtime1MinimumSupported: string,
+  runtime2Version: string,
+  runtime2MinimumSupported: string,
+): ProtocolNegotiationResult {
+  const versions = [runtime1Version, runtime1MinimumSupported, runtime2Version, runtime2MinimumSupported];
+  if (versions.some((version) => !parseVersion(version))) {
+    return { compatible: false, reason: ProtocolNegotiationFailureReason.MalformedVersion };
+  }
+  if (compareVersions(runtime1MinimumSupported, runtime1Version) > 0 ||
+      compareVersions(runtime2MinimumSupported, runtime2Version) > 0) {
+    return { compatible: false, reason: ProtocolNegotiationFailureReason.InvalidRange };
+  }
+  if (parseVersion(runtime1MinimumSupported)!.major !== parseVersion(runtime1Version)!.major ||
+      parseVersion(runtime2MinimumSupported)!.major !== parseVersion(runtime2Version)!.major) {
+    return { compatible: false, reason: ProtocolNegotiationFailureReason.InvalidRange };
+  }
+  if (parseVersion(runtime1Version)!.major !== parseVersion(runtime2Version)!.major) {
+    return { compatible: false, reason: ProtocolNegotiationFailureReason.UnsupportedMajor };
+  }
+  const negotiatedVersion = negotiate(runtime1Version, runtime1MinimumSupported, runtime2Version, runtime2MinimumSupported);
+  return negotiatedVersion
+    ? { compatible: true, negotiatedVersion }
+    : { compatible: false, reason: ProtocolNegotiationFailureReason.NoOverlap };
 }
 

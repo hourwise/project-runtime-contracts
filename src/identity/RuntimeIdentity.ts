@@ -2,6 +2,7 @@ import { z } from "zod";
 import { CapabilitySchema } from "../runtime/Capability";
 import { RuntimeKindSchema } from "../runtime/RuntimeKind";
 import { RuntimeMetadataSchema } from "../runtime/RuntimeMetadata";
+import { ProtocolVersionRangeSchema } from "../protocol/ProtocolVersion";
 
 /**
  * Runtime identity and version information.
@@ -38,6 +39,12 @@ export const RuntimeIdentitySchema = z.object({
   version: z.string().min(1, "Runtime version is required"),
   protocolVersion: z.string().min(1, "Protocol version is required"),
   minimumProtocolVersion: z.string().optional(),
+  packageVersion: z.string().min(1).optional(),
+  buildVersion: z.string().min(1).optional(),
+  supportedProtocolRange: ProtocolVersionRangeSchema.optional(),
+  optionalIntegrations: z.array(z.string().min(1)).min(1).optional(),
+  requiredIntegrations: z.array(z.string().min(1)).min(1).optional(),
+  standalone: z.boolean().optional(),
   kind: RuntimeKindSchema.optional(),
   instanceId: z.string().optional(),
   displayName: z.string().optional(),
@@ -46,4 +53,3 @@ export const RuntimeIdentitySchema = z.object({
 });
 
 export type RuntimeIdentity = z.infer<typeof RuntimeIdentitySchema>;
-

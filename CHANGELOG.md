@@ -6,6 +6,11 @@ it is not fabricated here.
 
 ## Unreleased
 
+- Added implementation-free principal/context, explicit resource-scope, correlation/reference,
+  delegation, idempotency, opaque state-handle, readiness, and compatibility-manifest schemas with source-level negative and
+  round-trip coverage. No package or protocol release number is claimed by this entry.
+- Added a packed-consumer smoke test, minimal CI validation, ownership/migration/distribution
+  guidance, and explicit design gates for unresolved cross-repository decisions.
 - Added a documentation set for protocol specification, version negotiation, evolution
   policy, ownership boundaries, conformance, glossary terms, and an ADR index.
 - Shortened the README so it links to the protocol documentation instead of duplicating it.

@@ -9,10 +9,14 @@ Out of scope for this package: policy engines, orchestration logic, memory syste
 retrieval and reliability scoring, context packs or memory stores, persistence, database
 adapters, gateway implementations, and other host/runtime behaviour.
 
-Current consumers named consistently in package metadata, examples, and source:
+The repository currently has no direct dependency evidence from a sibling runtime. The
+following projects are the intended interoperability peers; their local contract packages
+remain authoritative until they adopt this package:
 
 - Project Ananke
 - Project Mnemosyne
+- Project Horae
+- Moirae Code
 
 Install and validate locally:
 
@@ -77,6 +81,10 @@ Documentation:
 - [Glossary](docs/glossary.md)
 - [Changelog](CHANGELOG.md)
 - [ADR index](docs/decisions/README.md)
+- [Canonical contract matrix](docs/contract-ownership-matrix.md)
+- [Distribution and adoption](docs/distribution.md)
+- [Downstream migration](docs/downstream-migration.md)
+- [Design gates](docs/design-gates.md)
 
 Additional repository planning and history:
 
