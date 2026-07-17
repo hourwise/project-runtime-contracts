@@ -31,12 +31,14 @@ It is not a claim that any peer has already migrated.
 ## Ananke
 
 - Import shared identity, `AgentExecutionContext`, `ResourceScope`, correlation, registration,
-  readiness, protocol, delegation descriptors, and any future accepted preflight transport
-  envelope from the canonical package.
+  readiness, health, protocol, and delegation/reference schemas from the canonical package.
 - Adapt Ananke's current `ExecutionIdentity`, string `resourceScope`, and local content-preflight
   shapes at its boundary; do not copy Ananke policy decisions or reason-code semantics here.
 - Keep Ananke's `Outcome`, approvals, canonical action hashing, policy evaluation, credential
   brokering, and execution audit authoritative in Ananke.
+- Follow the exact classification and field mappings in the
+  [Ananke adapter report](./ananke-adapter-report.md). Content-preflight migration is deferred and
+  does not block the listed portable families.
 
 ## Mnemosyne
 

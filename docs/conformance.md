@@ -121,17 +121,26 @@ Implication:
 
 ## Fixture Status
 
-The repository contains one targeted positive/negative machine-readable fixture family for
-`CompatibilityManifest` under [`fixtures/compatibility-manifest`](../fixtures/compatibility-manifest).
-It does not yet contain a protocol-wide canonical fixture registry.
+Implemented and tested:
 
-Proposed future evidence:
+- the first-migration catalog at
+  [`fixtures/adoption-v1/catalog.json`](../fixtures/adoption-v1/catalog.json) covers 15 portable
+  families with 87 positive and negative cases;
+- each family has minimal, complete, missing-required, invalid-type, and semantic-negative
+  coverage;
+- `npm run fixtures:validate` executes the expected result for every case;
+- the packed-consumer smoke test validates a representative installed fixture from every family;
+- a separate pinned Ananke consumer fixture proves the current downstream shapes require
+  adapters without making those shapes portable conformance fixtures.
 
-- canonical positive and negative fixtures for every exported family;
-- consumer-compatibility payload suites for Ananke, Mnemosyne, Horae, and Moirae Code;
-- release-by-release conformance fixture baselines.
+Not implemented:
 
-Do not describe the targeted manifest fixtures as full protocol conformance evidence.
+- fixtures for every export outside the first-migration families;
+- adopted-consumer suites for Mnemosyne, Horae, or Moirae Code;
+- a second immutable release-to-release fixture baseline.
+
+The adoption catalog supports claims only for its named schemas and tested behavior. It is not
+evidence for authentication, authorization, transport operation, persistence, or domain policy.
 
 ## Suggested Third-Party Test Matrix
 
@@ -163,7 +172,8 @@ implementation that claims "full protocol conformance" should either:
 
 ## Open Questions
 
-- No protocol-wide canonical fixture bundle exists yet.
+- No all-export protocol-wide canonical fixture bundle exists yet; the implemented catalog is
+  deliberately limited to the first Ananke migration families.
 - No standardized wire payload exists for negotiation failure.
 - No repository-wide rule defines how unknown capability IDs should be surfaced to users or
   policy systems after schema validation succeeds.

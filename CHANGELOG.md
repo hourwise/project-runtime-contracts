@@ -6,11 +6,17 @@ it is not fabricated here.
 
 ## Unreleased
 
+- Added the Stage-A adoption-baseline manifest schema/example/generator, 87-case first-migration
+  conformance catalog, packed public-surface verification, and a pinned read-only Ananke consumer
+  test. The proposed tag is documented but not created; no package or release is published.
+- Recorded the Ananke adapter boundary, content-preflight deferral, and a separate review of six
+  development-tool dependency vulnerabilities without changing dependencies.
 - Tightened protocol semantic-version syntax and runtime identity range consistency; added an
   agent-specific dual-principal context, delegation correlation requirements, extended portable
   correlation references, compatibility-manifest fixtures, and packed public documentation.
-  The strict version and delegation changes narrow the prior draft surface; release maintainers
-  must classify them as pre-release corrections or assign an appropriate protocol migration.
+  [ADR-0005](./docs/decisions/ADR-0005-adoption-baseline-release-classification.md)
+  classifies these changes as pre-release corrections within the still-unreleased protocol
+  `1.4.0`; legacy draft payloads require migration rather than weakened canonical schemas.
 - Added implementation-free principal/context, explicit resource-scope, correlation/reference,
   delegation, idempotency, opaque state-handle, readiness, and compatibility-manifest schemas with source-level negative and
   round-trip coverage. No package or protocol release number is claimed by this entry.

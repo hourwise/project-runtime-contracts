@@ -4,6 +4,12 @@
 The current repository package is `project-runtime-contracts` at `0.4.0` and advertises
 protocol `1.4.0` through `1.0.0`; no registry publication authority is assigned here.
 
+The proposed first immutable tag is
+`runtime-contracts-adoption-v0.4.0-protocol-1.4.0`. It identifies package and protocol context
+without claiming npm publication. It has not been created. The final artifact and tag must point
+to the final commit produced after this pass, not the reviewed pre-pass commit
+`94df00f43fc90c78aba59763b585614a50f9b695`.
+
 ## Package identity decision
 
 The current install and import name remains `project-runtime-contracts`. Renaming it in this
@@ -46,4 +52,6 @@ tarball or package after validating the manifest and its own local schemas.
 
 The packed artifact includes the README, changelog, public protocol/evolution/conformance/
 ownership documentation, ADR index and records, design gates, downstream migration guide, and
-the [example compatibility manifest](../examples/compatibility-manifest.json).
+the compatibility and adoption-baseline examples. See the
+[Stage-A adoption baseline](./adoption-baseline.md) for generation, digest verification, fixture
+coverage, and status distinctions.

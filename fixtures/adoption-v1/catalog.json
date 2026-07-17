@@ -1,0 +1,184 @@
+{
+  "fixtureSchemaVersion": "1.0.0",
+  "protocolVersion": "1.4.0",
+  "description": "Portable first-migration conformance fixtures. Expected results describe schema parsing except for protocol-negotiation cases.",
+  "families": [
+    {
+      "id": "principal-identity",
+      "schema": "PrincipalIdentitySchema",
+      "cases": [
+        { "id": "minimal-human", "category": "minimal_valid", "expected": { "parseSuccess": true }, "payload": { "id": "human-1", "kind": "human" } },
+        { "id": "complete-service", "category": "complete_valid", "expected": { "parseSuccess": true }, "payload": { "id": "service-1", "kind": "service", "issuer": "identity.example", "tenantId": "tenant-1", "attributes": { "environment": "test" } } },
+        { "id": "missing-id", "category": "missing_required", "expected": { "parseSuccess": false }, "payload": { "kind": "human" } },
+        { "id": "kind-wrong-type", "category": "invalid_type", "expected": { "parseSuccess": false }, "payload": { "id": "human-1", "kind": 1 } },
+        { "id": "empty-identifier", "category": "semantic_invalid", "expected": { "parseSuccess": false }, "payload": { "id": "", "kind": "human" } }
+      ]
+    },
+    {
+      "id": "dual-principal-context",
+      "schema": "DualPrincipalContextSchema",
+      "cases": [
+        { "id": "minimal-human-agent", "category": "minimal_valid", "expected": { "parseSuccess": true }, "payload": { "authenticatedPrincipal": { "id": "human-1", "kind": "human" }, "actingPrincipal": { "id": "agent-1", "kind": "agent" } } },
+        { "id": "complete-service-agent", "category": "complete_valid", "expected": { "parseSuccess": true }, "payload": { "authenticatedPrincipal": { "id": "service-1", "kind": "service", "issuer": "workload.example", "tenantId": "tenant-1" }, "actingPrincipal": { "id": "agent-1", "kind": "agent", "issuer": "agents.example" }, "representedPrincipal": { "id": "human-1", "kind": "human" } } },
+        { "id": "missing-acting-principal", "category": "missing_required", "expected": { "parseSuccess": false }, "payload": { "authenticatedPrincipal": { "id": "human-1", "kind": "human" } } },
+        { "id": "authenticated-principal-wrong-type", "category": "invalid_type", "expected": { "parseSuccess": false }, "payload": { "authenticatedPrincipal": "human-1", "actingPrincipal": { "id": "agent-1", "kind": "agent" } } },
+        { "id": "agent-authenticated-principal", "category": "semantic_invalid", "expected": { "parseSuccess": false }, "payload": { "authenticatedPrincipal": { "id": "agent-auth", "kind": "agent" }, "actingPrincipal": { "id": "agent-1", "kind": "agent" } } }
+      ]
+    },
+    {
+      "id": "agent-execution-context",
+      "schema": "AgentExecutionContextSchema",
+      "cases": [
+        { "id": "minimal-agent-context", "category": "minimal_valid", "expected": { "parseSuccess": true }, "payload": { "authenticatedPrincipal": { "id": "human-1", "kind": "human" }, "actingPrincipal": { "id": "agent-1", "kind": "agent" }, "runtimeId": "ananke", "sessionId": "session-1" } },
+        { "id": "complete-agent-context", "category": "complete_valid", "expected": { "parseSuccess": true }, "payload": { "authenticatedPrincipal": { "id": "service-1", "kind": "service", "issuer": "workload.example" }, "actingPrincipal": { "id": "agent-1", "kind": "agent" }, "representedPrincipal": { "id": "human-1", "kind": "human" }, "runtimeId": "ananke", "runtimeInstanceId": "ananke-local-1", "sessionId": "session-1", "projectId": "project-1", "workspaceId": "workspace-1", "tenantId": "tenant-1" } },
+        { "id": "missing-session", "category": "missing_required", "expected": { "parseSuccess": false }, "payload": { "authenticatedPrincipal": { "id": "human-1", "kind": "human" }, "actingPrincipal": { "id": "agent-1", "kind": "agent" }, "runtimeId": "ananke" } },
+        { "id": "runtime-id-wrong-type", "category": "invalid_type", "expected": { "parseSuccess": false }, "payload": { "authenticatedPrincipal": { "id": "human-1", "kind": "human" }, "actingPrincipal": { "id": "agent-1", "kind": "agent" }, "runtimeId": 1, "sessionId": "session-1" } },
+        { "id": "human-acting-agent", "category": "semantic_invalid", "expected": { "parseSuccess": false }, "payload": { "authenticatedPrincipal": { "id": "human-1", "kind": "human" }, "actingPrincipal": { "id": "human-2", "kind": "human" }, "runtimeId": "ananke", "sessionId": "session-1" } }
+      ]
+    },
+    {
+      "id": "resource-scope",
+      "schema": "ResourceScopeSchema",
+      "cases": [
+        { "id": "minimal-bounded", "category": "minimal_valid", "expected": { "parseSuccess": true }, "payload": { "mode": "bounded", "tenantId": "tenant-1" } },
+        { "id": "complete-bounded", "category": "complete_valid", "expected": { "parseSuccess": true }, "payload": { "mode": "bounded", "tenantId": "tenant-1", "accountId": "account-1", "projectId": "project-1", "workspaceId": "workspace-1", "resourceType": "filesystem", "resourceIds": ["workspace/readme.md"], "operations": ["read"], "providerNamespace": "local", "metadata": { "source": "consumer-adapter" } } },
+        { "id": "missing-mode", "category": "missing_required", "expected": { "parseSuccess": false }, "payload": { "tenantId": "tenant-1" } },
+        { "id": "resource-ids-wrong-type", "category": "invalid_type", "expected": { "parseSuccess": false }, "payload": { "mode": "bounded", "resourceIds": "resource-1" } },
+        { "id": "bounded-without-boundary", "category": "semantic_invalid", "expected": { "parseSuccess": false }, "payload": { "mode": "bounded" } },
+        { "id": "wildcard-prohibited", "category": "semantic_invalid", "expected": { "parseSuccess": false }, "payload": { "mode": "bounded", "resourceIds": ["filesystem:*"] } }
+      ]
+    },
+    {
+      "id": "correlation-and-causation",
+      "schema": "CorrelationContextSchema",
+      "cases": [
+        { "id": "minimal-correlation", "category": "minimal_valid", "expected": { "parseSuccess": true }, "payload": { "requestId": "request-1", "correlationId": "correlation-1" } },
+        { "id": "complete-correlation", "category": "complete_valid", "expected": { "parseSuccess": true }, "payload": { "requestId": "request-1", "correlationId": "correlation-1", "causationId": "event-0", "sessionId": "session-1", "actionId": "action-1", "workflowId": "workflow-1", "executionId": "execution-1", "stepId": "step-1", "attemptId": "attempt-1", "approvalReference": "approval-1", "delegationReference": "grant-1", "auditReference": { "auditId": "audit-1", "sourceRuntime": "ananke" }, "stateHandleReference": { "handleId": "state-1", "ownerRuntime": "horae" } } },
+        { "id": "missing-correlation", "category": "missing_required", "expected": { "parseSuccess": false }, "payload": { "requestId": "request-1" } },
+        { "id": "request-id-wrong-type", "category": "invalid_type", "expected": { "parseSuccess": false }, "payload": { "requestId": 1, "correlationId": "correlation-1" } },
+        { "id": "empty-causation", "category": "semantic_invalid", "expected": { "parseSuccess": false }, "payload": { "requestId": "request-1", "correlationId": "correlation-1", "causationId": "" } }
+      ]
+    },
+    {
+      "id": "portable-references",
+      "schema": "case-specific",
+      "cases": [
+        { "id": "minimal-action-reference", "category": "minimal_valid", "schema": "ReferenceIdSchema", "expected": { "parseSuccess": true }, "payload": "action-1" },
+        { "id": "complete-approval-reference", "category": "complete_valid", "schema": "ApprovalReferenceSchema", "expected": { "parseSuccess": true }, "payload": { "approvalId": "approval-1", "sourceRuntime": "ananke", "policyVersion": "policy-1", "requestHash": "sha256:opaque" } },
+        { "id": "delegation-reference", "category": "additional_valid", "schema": "GrantReferenceSchema", "expected": { "parseSuccess": true }, "payload": { "grantId": "grant-1", "issuer": "ananke", "revocationReference": "revocation-1" } },
+        { "id": "audit-reference", "category": "additional_valid", "schema": "AuditReferenceSchema", "expected": { "parseSuccess": true }, "payload": { "auditId": "audit-1", "sourceRuntime": "ananke" } },
+        { "id": "approval-missing-id", "category": "missing_required", "schema": "ApprovalReferenceSchema", "expected": { "parseSuccess": false }, "payload": { "sourceRuntime": "ananke" } },
+        { "id": "grant-id-wrong-type", "category": "invalid_type", "schema": "GrantReferenceSchema", "expected": { "parseSuccess": false }, "payload": { "grantId": 1 } },
+        { "id": "empty-audit-id", "category": "semantic_invalid", "schema": "AuditReferenceSchema", "expected": { "parseSuccess": false }, "payload": { "auditId": "" } }
+      ]
+    },
+    {
+      "id": "delegation-request",
+      "schema": "DelegationRequestSchema",
+      "cases": [
+        { "id": "minimal-delegation-request", "category": "minimal_valid", "expected": { "parseSuccess": true }, "payload": { "requestId": "request-1", "context": { "authenticatedPrincipal": { "id": "human-1", "kind": "human" }, "actingPrincipal": { "id": "agent-1", "kind": "agent" }, "runtimeId": "ananke", "sessionId": "session-1" }, "correlationId": "correlation-1", "audience": "provider-1", "capabilityIds": ["model.invoke"], "resourceScope": { "mode": "bounded", "tenantId": "tenant-1" }, "purpose": "answer a user request", "requestedAt": "2026-07-17T12:00:00.000Z" } },
+        { "id": "complete-delegation-request", "category": "complete_valid", "expected": { "parseSuccess": true }, "payload": { "requestId": "request-2", "context": { "authenticatedPrincipal": { "id": "service-1", "kind": "service", "issuer": "workload.example" }, "actingPrincipal": { "id": "agent-1", "kind": "agent" }, "representedPrincipal": { "id": "human-1", "kind": "human" }, "runtimeId": "ananke", "runtimeInstanceId": "ananke-1", "sessionId": "session-1", "projectId": "project-1", "workspaceId": "workspace-1", "tenantId": "tenant-1" }, "correlationId": "correlation-2", "causationId": "event-1", "actionId": "action-1", "audience": "provider-1", "toolIds": ["filesystem.read"], "operationIds": ["read"], "resourceScope": { "mode": "bounded", "tenantId": "tenant-1", "projectId": "project-1", "resourceIds": ["readme.md"] }, "purpose": "read project documentation", "approvalReference": { "approvalId": "approval-1", "sourceRuntime": "ananke" }, "requestedAt": "2026-07-17T12:00:00.000Z", "metadata": { "adapter": "ananke" } } },
+        { "id": "missing-correlation", "category": "missing_required", "expected": { "parseSuccess": false }, "payload": { "requestId": "request-1", "context": { "authenticatedPrincipal": { "id": "human-1", "kind": "human" }, "actingPrincipal": { "id": "agent-1", "kind": "agent" }, "runtimeId": "ananke", "sessionId": "session-1" }, "audience": "provider-1", "capabilityIds": ["model.invoke"], "resourceScope": { "mode": "bounded", "tenantId": "tenant-1" }, "purpose": "answer", "requestedAt": "2026-07-17T12:00:00.000Z" } },
+        { "id": "audience-wrong-type", "category": "invalid_type", "expected": { "parseSuccess": false }, "payload": { "requestId": "request-1", "context": { "authenticatedPrincipal": { "id": "human-1", "kind": "human" }, "actingPrincipal": { "id": "agent-1", "kind": "agent" }, "runtimeId": "ananke", "sessionId": "session-1" }, "correlationId": "correlation-1", "audience": 1, "capabilityIds": ["model.invoke"], "resourceScope": { "mode": "bounded", "tenantId": "tenant-1" }, "purpose": "answer", "requestedAt": "2026-07-17T12:00:00.000Z" } },
+        { "id": "missing-capability-tool-operation", "category": "semantic_invalid", "expected": { "parseSuccess": false }, "payload": { "requestId": "request-1", "context": { "authenticatedPrincipal": { "id": "human-1", "kind": "human" }, "actingPrincipal": { "id": "agent-1", "kind": "agent" }, "runtimeId": "ananke", "sessionId": "session-1" }, "correlationId": "correlation-1", "audience": "provider-1", "resourceScope": { "mode": "bounded", "tenantId": "tenant-1" }, "purpose": "answer", "requestedAt": "2026-07-17T12:00:00.000Z" } },
+        { "id": "missing-explicit-resource-scope", "category": "semantic_invalid", "expected": { "parseSuccess": false }, "payload": { "requestId": "request-1", "context": { "authenticatedPrincipal": { "id": "human-1", "kind": "human" }, "actingPrincipal": { "id": "agent-1", "kind": "agent" }, "runtimeId": "ananke", "sessionId": "session-1" }, "correlationId": "correlation-1", "audience": "provider-1", "capabilityIds": ["model.invoke"], "purpose": "answer", "requestedAt": "2026-07-17T12:00:00.000Z" } },
+        { "id": "human-acting-agent", "category": "semantic_invalid", "expected": { "parseSuccess": false }, "payload": { "requestId": "request-1", "context": { "authenticatedPrincipal": { "id": "human-1", "kind": "human" }, "actingPrincipal": { "id": "human-2", "kind": "human" }, "runtimeId": "ananke", "sessionId": "session-1" }, "correlationId": "correlation-1", "audience": "provider-1", "capabilityIds": ["model.invoke"], "resourceScope": { "mode": "bounded", "tenantId": "tenant-1" }, "purpose": "answer", "requestedAt": "2026-07-17T12:00:00.000Z" } },
+        { "id": "wildcard-resource-scope", "category": "semantic_invalid", "expected": { "parseSuccess": false }, "payload": { "requestId": "request-1", "context": { "authenticatedPrincipal": { "id": "human-1", "kind": "human" }, "actingPrincipal": { "id": "agent-1", "kind": "agent" }, "runtimeId": "ananke", "sessionId": "session-1" }, "correlationId": "correlation-1", "audience": "provider-1", "capabilityIds": ["model.invoke"], "resourceScope": { "mode": "bounded", "resourceIds": ["filesystem:*"] }, "purpose": "answer", "requestedAt": "2026-07-17T12:00:00.000Z" } }
+      ]
+    },
+    {
+      "id": "delegation-descriptor",
+      "schema": "DelegationDescriptorSchema",
+      "cases": [
+        { "id": "minimal-delegation-descriptor", "category": "minimal_valid", "expected": { "parseSuccess": true }, "payload": { "grantId": "grant-1", "issuer": "ananke", "subject": "agent-1", "delegatingPrincipal": { "id": "human-1", "kind": "human" }, "actingPrincipal": { "id": "agent-1", "kind": "agent" }, "audience": "provider-1", "capabilityIds": ["model.invoke"], "resourceScope": { "mode": "bounded", "tenantId": "tenant-1" }, "purpose": "answer", "sessionId": "session-1", "issuedAt": "2026-07-17T12:00:00.000Z", "expiresAt": "2026-07-17T12:05:00.000Z" } },
+        { "id": "complete-delegation-descriptor", "category": "complete_valid", "expected": { "parseSuccess": true }, "payload": { "grantId": "grant-2", "issuer": "ananke", "subject": "agent-1", "delegatingPrincipal": { "id": "service-1", "kind": "service", "issuer": "workload.example" }, "actingPrincipal": { "id": "agent-1", "kind": "agent" }, "audience": "provider-1", "toolIds": ["filesystem.read"], "operationIds": ["read"], "resourceScope": { "mode": "bounded", "tenantId": "tenant-1", "projectId": "project-1", "resourceIds": ["readme.md"] }, "purpose": "read documentation", "sessionId": "session-1", "projectId": "project-1", "approvalReference": { "approvalId": "approval-1", "sourceRuntime": "ananke" }, "issuedAt": "2026-07-17T12:00:00.000Z", "notBefore": "2026-07-17T12:00:00.000Z", "expiresAt": "2026-07-17T12:05:00.000Z", "nonce": "nonce-1", "requestHash": "request-hash-1", "revocationReference": "revocation-1", "idempotencyPolicy": { "mode": "single_use", "maxUses": 1 }, "stateHandleReference": { "handleId": "state-1", "ownerRuntime": "ananke" }, "metadata": { "adapter": "ananke" } } },
+        { "id": "missing-resource-scope", "category": "missing_required", "expected": { "parseSuccess": false }, "payload": { "grantId": "grant-1", "issuer": "ananke", "subject": "agent-1", "delegatingPrincipal": { "id": "human-1", "kind": "human" }, "actingPrincipal": { "id": "agent-1", "kind": "agent" }, "audience": "provider-1", "capabilityIds": ["model.invoke"], "purpose": "answer", "sessionId": "session-1", "issuedAt": "2026-07-17T12:00:00.000Z", "expiresAt": "2026-07-17T12:05:00.000Z" } },
+        { "id": "grant-id-wrong-type", "category": "invalid_type", "expected": { "parseSuccess": false }, "payload": { "grantId": 1, "issuer": "ananke", "subject": "agent-1", "delegatingPrincipal": { "id": "human-1", "kind": "human" }, "actingPrincipal": { "id": "agent-1", "kind": "agent" }, "audience": "provider-1", "capabilityIds": ["model.invoke"], "resourceScope": { "mode": "bounded", "tenantId": "tenant-1" }, "purpose": "answer", "sessionId": "session-1", "issuedAt": "2026-07-17T12:00:00.000Z", "expiresAt": "2026-07-17T12:05:00.000Z" } },
+        { "id": "expiry-before-issue", "category": "semantic_invalid", "expected": { "parseSuccess": false }, "payload": { "grantId": "grant-1", "issuer": "ananke", "subject": "agent-1", "delegatingPrincipal": { "id": "human-1", "kind": "human" }, "actingPrincipal": { "id": "agent-1", "kind": "agent" }, "audience": "provider-1", "capabilityIds": ["model.invoke"], "resourceScope": { "mode": "bounded", "tenantId": "tenant-1" }, "purpose": "answer", "sessionId": "session-1", "issuedAt": "2026-07-17T12:05:00.000Z", "expiresAt": "2026-07-17T12:00:00.000Z" } },
+        { "id": "human-acting-principal", "category": "semantic_invalid", "expected": { "parseSuccess": false }, "payload": { "grantId": "grant-1", "issuer": "ananke", "subject": "agent-1", "delegatingPrincipal": { "id": "human-1", "kind": "human" }, "actingPrincipal": { "id": "human-2", "kind": "human" }, "audience": "provider-1", "capabilityIds": ["model.invoke"], "resourceScope": { "mode": "bounded", "tenantId": "tenant-1" }, "purpose": "answer", "sessionId": "session-1", "issuedAt": "2026-07-17T12:00:00.000Z", "expiresAt": "2026-07-17T12:05:00.000Z" } },
+        { "id": "capability-is-not-a-grant", "category": "semantic_invalid", "expected": { "parseSuccess": false }, "payload": { "id": "model.invoke", "name": "Invoke model", "version": "1.0.0" } }
+      ]
+    },
+    {
+      "id": "runtime-identity",
+      "schema": "RuntimeIdentitySchema",
+      "cases": [
+        { "id": "minimal-runtime-identity", "category": "minimal_valid", "expected": { "parseSuccess": true }, "payload": { "runtime": "ananke", "version": "0.1.0", "protocolVersion": "1.4.0" } },
+        { "id": "complete-runtime-identity", "category": "complete_valid", "expected": { "parseSuccess": true }, "payload": { "runtime": "ananke", "version": "0.1.0", "protocolVersion": "1.4.0", "minimumProtocolVersion": "1.0.0", "packageVersion": "0.4.0", "buildVersion": "1e38e458", "supportedProtocolRange": { "minimum": "1.0.0", "maximum": "1.4.0" }, "optionalIntegrations": ["content-preflight"], "standalone": true, "instanceId": "ananke-1", "displayName": "Ananke", "capabilities": [{ "id": "policy.evaluate", "name": "Evaluate policy", "version": "1.0.0" }] } },
+        { "id": "missing-protocol-version", "category": "missing_required", "expected": { "parseSuccess": false }, "payload": { "runtime": "ananke", "version": "0.1.0" } },
+        { "id": "runtime-wrong-type", "category": "invalid_type", "expected": { "parseSuccess": false }, "payload": { "runtime": 1, "version": "0.1.0", "protocolVersion": "1.4.0" } },
+        { "id": "inconsistent-supported-range", "category": "semantic_invalid", "expected": { "parseSuccess": false }, "payload": { "runtime": "ananke", "version": "0.1.0", "protocolVersion": "1.4.0", "minimumProtocolVersion": "1.0.0", "supportedProtocolRange": { "minimum": "1.1.0", "maximum": "1.3.0" } } },
+        { "id": "malformed-leading-zero-version", "category": "semantic_invalid", "expected": { "parseSuccess": false }, "payload": { "runtime": "ananke", "version": "0.1.0", "protocolVersion": "01.4.0" } }
+      ]
+    },
+    {
+      "id": "runtime-registration",
+      "schema": "RuntimeRegistrationSchema",
+      "cases": [
+        { "id": "minimal-runtime-registration", "category": "minimal_valid", "expected": { "parseSuccess": true }, "payload": { "identity": { "runtime": "ananke", "version": "0.1.0", "protocolVersion": "1.4.0" } } },
+        { "id": "complete-runtime-registration", "category": "complete_valid", "expected": { "parseSuccess": true }, "payload": { "identity": { "runtime": "ananke", "version": "0.1.0", "protocolVersion": "1.4.0", "minimumProtocolVersion": "1.0.0", "supportedProtocolRange": { "minimum": "1.0.0", "maximum": "1.4.0" } }, "capabilities": [{ "id": "policy.evaluate", "name": "Evaluate policy", "version": "1.0.0", "category": "policy" }], "health": { "healthy": true, "status": "healthy", "uptimeMs": 1000, "warnings": [] }, "readiness": { "ready": true, "status": "ready" }, "endpoints": [{ "id": "http-1", "transport": "http", "url": "https://ananke.example/runtime" }], "registeredAt": "2026-07-17T12:00:00.000Z", "expiresAt": "2026-07-17T13:00:00.000Z", "profileIds": ["default"], "healthEndpoint": "/health", "readinessEndpoint": "/ready", "inspectionMechanism": "http", "optionalIntegrations": ["content-preflight"], "standalone": true, "degradedModes": ["approval-store-unavailable"] } },
+        { "id": "missing-identity", "category": "missing_required", "expected": { "parseSuccess": false }, "payload": { "standalone": true } },
+        { "id": "identity-wrong-type", "category": "invalid_type", "expected": { "parseSuccess": false }, "payload": { "identity": "ananke" } },
+        { "id": "nested-range-inconsistent", "category": "semantic_invalid", "expected": { "parseSuccess": false }, "payload": { "identity": { "runtime": "ananke", "version": "0.1.0", "protocolVersion": "1.4.0", "minimumProtocolVersion": "1.0.0", "supportedProtocolRange": { "minimum": "1.0.0", "maximum": "1.3.0" } } } }
+      ]
+    },
+    {
+      "id": "runtime-readiness",
+      "schema": "RuntimeReadinessSchema",
+      "cases": [
+        { "id": "minimal-ready", "category": "minimal_valid", "expected": { "parseSuccess": true }, "payload": { "ready": true, "status": "ready" } },
+        { "id": "complete-degraded", "category": "complete_valid", "expected": { "parseSuccess": true }, "payload": { "ready": true, "status": "degraded", "checkedAt": "2026-07-17T12:00:00.000Z", "reasonCode": "OPTIONAL_INTEGRATION_UNAVAILABLE", "unavailableIntegrations": ["content-preflight"], "dependencies": [{ "dependencyId": "approval-store", "status": "degraded", "required": false, "message": "running without durable approvals" }], "metadata": { "source": "health-probe" } } },
+        { "id": "missing-ready", "category": "missing_required", "expected": { "parseSuccess": false }, "payload": { "status": "ready" } },
+        { "id": "ready-wrong-type", "category": "invalid_type", "expected": { "parseSuccess": false }, "payload": { "ready": "true", "status": "ready" } },
+        { "id": "ready-not-ready-conflict", "category": "semantic_invalid", "expected": { "parseSuccess": false }, "payload": { "ready": true, "status": "not_ready" } }
+      ]
+    },
+    {
+      "id": "runtime-health",
+      "schema": "RuntimeHealthSchema",
+      "cases": [
+        { "id": "minimal-health", "category": "minimal_valid", "expected": { "parseSuccess": true }, "payload": { "healthy": true, "uptimeMs": 0, "warnings": [] } },
+        { "id": "complete-health", "category": "complete_valid", "expected": { "parseSuccess": true }, "payload": { "healthy": true, "status": "healthy", "uptimeMs": 3600000, "warnings": [], "checkedAt": "2026-07-17T12:00:00.000Z", "message": "operational", "activeSessions": 2, "metadata": { "instance": "ananke-1" } } },
+        { "id": "missing-warnings", "category": "missing_required", "expected": { "parseSuccess": false }, "payload": { "healthy": true, "uptimeMs": 0 } },
+        { "id": "uptime-wrong-type", "category": "invalid_type", "expected": { "parseSuccess": false }, "payload": { "healthy": true, "uptimeMs": "0", "warnings": [] } },
+        { "id": "negative-uptime", "category": "semantic_invalid", "expected": { "parseSuccess": false }, "payload": { "healthy": true, "uptimeMs": -1, "warnings": [] } }
+      ]
+    },
+    {
+      "id": "protocol-version-range",
+      "schema": "ProtocolVersionRangeSchema",
+      "cases": [
+        { "id": "minimal-single-version-range", "category": "minimal_valid", "expected": { "parseSuccess": true }, "payload": { "minimum": "1.4.0", "maximum": "1.4.0" } },
+        { "id": "complete-supported-range", "category": "complete_valid", "expected": { "parseSuccess": true }, "payload": { "minimum": "1.0.0", "maximum": "1.4.0" } },
+        { "id": "missing-maximum", "category": "missing_required", "expected": { "parseSuccess": false }, "payload": { "minimum": "1.0.0" } },
+        { "id": "minimum-wrong-type", "category": "invalid_type", "expected": { "parseSuccess": false }, "payload": { "minimum": 1, "maximum": "1.4.0" } },
+        { "id": "unsupported-major-span", "category": "semantic_invalid", "expected": { "parseSuccess": false }, "payload": { "minimum": "1.0.0", "maximum": "2.0.0" } },
+        { "id": "malformed-incomplete-version", "category": "semantic_invalid", "expected": { "parseSuccess": false }, "payload": { "minimum": "1.0", "maximum": "1.4.0" } }
+      ]
+    },
+    {
+      "id": "protocol-negotiation",
+      "schema": "negotiateDetailed",
+      "cases": [
+        { "id": "exact-match", "category": "minimal_valid", "expected": { "compatible": true, "negotiatedVersion": "1.4.0" }, "payload": { "runtime1Version": "1.4.0", "runtime1Minimum": "1.4.0", "runtime2Version": "1.4.0", "runtime2Minimum": "1.4.0" } },
+        { "id": "highest-overlap", "category": "complete_valid", "expected": { "compatible": true, "negotiatedVersion": "1.2.0" }, "payload": { "runtime1Version": "1.4.0", "runtime1Minimum": "1.0.0", "runtime2Version": "1.2.0", "runtime2Minimum": "1.1.0" } },
+        { "id": "missing-runtime-version", "category": "missing_required", "expected": { "compatible": false, "reason": "malformed_version" }, "payload": { "runtime1Minimum": "1.0.0", "runtime2Version": "1.4.0", "runtime2Minimum": "1.0.0" } },
+        { "id": "runtime-version-wrong-type", "category": "invalid_type", "expected": { "compatible": false, "reason": "malformed_version" }, "payload": { "runtime1Version": 1, "runtime1Minimum": "1.0.0", "runtime2Version": "1.4.0", "runtime2Minimum": "1.0.0" } },
+        { "id": "unsupported-major", "category": "semantic_invalid", "expected": { "compatible": false, "reason": "unsupported_major" }, "payload": { "runtime1Version": "1.4.0", "runtime1Minimum": "1.0.0", "runtime2Version": "2.0.0", "runtime2Minimum": "2.0.0" } },
+        { "id": "invalid-local-range", "category": "semantic_invalid", "expected": { "compatible": false, "reason": "invalid_range" }, "payload": { "runtime1Version": "1.0.0", "runtime1Minimum": "1.1.0", "runtime2Version": "1.4.0", "runtime2Minimum": "1.0.0" } }
+      ]
+    },
+    {
+      "id": "compatibility-manifest",
+      "schema": "CompatibilityManifestSchema",
+      "cases": [
+        { "id": "minimal-compatibility-manifest", "category": "minimal_valid", "expected": { "parseSuccess": true }, "payload": { "manifestSchemaVersion": "1.0.0", "runtimeName": "ananke", "runtimeVersion": "0.1.0", "packageVersion": "0.4.0", "protocolVersion": "1.4.0", "minimumSupportedProtocolVersion": "1.0.0", "supportedProtocolRange": { "minimum": "1.0.0", "maximum": "1.4.0" }, "requiredRuntimeContractsVersionRange": "0.4.0", "standalone": true } },
+        { "id": "complete-compatibility-manifest", "category": "complete_valid", "expected": { "parseSuccess": true }, "payload": { "manifestSchemaVersion": "1.0.0", "runtimeName": "ananke", "runtimeVersion": "0.1.0", "clientName": "consumer-test", "clientVersion": "1.0.0", "packageVersion": "0.4.0", "buildVersion": "1e38e458", "protocolVersion": "1.4.0", "minimumSupportedProtocolVersion": "1.0.0", "preferredProtocolVersion": "1.4.0", "supportedProtocolRange": { "minimum": "1.0.0", "maximum": "1.4.0" }, "requiredRuntimeContractsVersionRange": "0.4.0", "supportedMcpVersions": ["2026-01-26"], "supportedMcpProtocolEras": ["2026"], "optionalIntegrations": ["content-preflight"], "supportedTransports": ["http", "mcp"], "capabilities": [{ "id": "policy.evaluate", "name": "Evaluate policy", "version": "1.0.0" }], "standalone": true, "knownConstraints": ["content-preflight is not portable"], "degradedModes": ["approval-store-unavailable"], "testedPeers": [{ "runtime": "project-runtime-contracts-consumer", "protocolVersion": "1.4.0", "commit": "1e38e4580ca0f8db46a35dce67362e0e2467d794", "testedAt": "2026-07-17T12:00:00.000Z" }], "generatedAt": "2026-07-17T12:00:00.000Z" } },
+        { "id": "missing-package-version", "category": "missing_required", "expected": { "parseSuccess": false }, "payload": { "manifestSchemaVersion": "1.0.0", "runtimeName": "ananke", "runtimeVersion": "0.1.0", "protocolVersion": "1.4.0", "minimumSupportedProtocolVersion": "1.0.0", "supportedProtocolRange": { "minimum": "1.0.0", "maximum": "1.4.0" }, "requiredRuntimeContractsVersionRange": "0.4.0", "standalone": true } },
+        { "id": "standalone-wrong-type", "category": "invalid_type", "expected": { "parseSuccess": false }, "payload": { "manifestSchemaVersion": "1.0.0", "runtimeName": "ananke", "runtimeVersion": "0.1.0", "packageVersion": "0.4.0", "protocolVersion": "1.4.0", "minimumSupportedProtocolVersion": "1.0.0", "supportedProtocolRange": { "minimum": "1.0.0", "maximum": "1.4.0" }, "requiredRuntimeContractsVersionRange": "0.4.0", "standalone": "true" } },
+        { "id": "current-outside-range", "category": "semantic_invalid", "expected": { "parseSuccess": false }, "payload": { "manifestSchemaVersion": "1.0.0", "runtimeName": "ananke", "runtimeVersion": "0.1.0", "packageVersion": "0.4.0", "protocolVersion": "1.4.0", "minimumSupportedProtocolVersion": "1.0.0", "supportedProtocolRange": { "minimum": "1.0.0", "maximum": "1.3.0" }, "requiredRuntimeContractsVersionRange": "0.4.0", "standalone": true } },
+        { "id": "preferred-outside-range", "category": "semantic_invalid", "expected": { "parseSuccess": false }, "payload": { "manifestSchemaVersion": "1.0.0", "runtimeName": "ananke", "runtimeVersion": "0.1.0", "packageVersion": "0.4.0", "protocolVersion": "1.4.0", "minimumSupportedProtocolVersion": "1.0.0", "preferredProtocolVersion": "1.5.0", "supportedProtocolRange": { "minimum": "1.0.0", "maximum": "1.4.0" }, "requiredRuntimeContractsVersionRange": "0.4.0", "standalone": true } }
+      ]
+    }
+  ]
+}

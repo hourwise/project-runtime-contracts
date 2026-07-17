@@ -1,0 +1,102 @@
+{
+  "fixtureSchemaVersion": "1.0.0",
+  "consumer": "Project-Ananke",
+  "sourceRepository": "https://github.com/hourwise/Project-Ananke",
+  "sourceCommit": "1e38e4580ca0f8db46a35dce67362e0e2467d794",
+  "sourcePaths": [
+    "package.json",
+    "packages/schema/src/index.ts",
+    "packages/runtime-core/src/auth.ts",
+    "packages/runtime-core/src/index.ts"
+  ],
+  "evidenceKind": "representative payloads copied from exported schema shapes; values are test-only",
+  "packageEvidence": {
+    "name": "ananke",
+    "version": "0.1.0",
+    "private": true,
+    "runtimeContractsDependencyDeclared": false
+  },
+  "operatorIdentity": {
+    "operatorId": "operator-1",
+    "displayName": "Test Operator",
+    "sessionId": "operator-session-1",
+    "authMethod": "oidc-jwt",
+    "roles": ["approver"],
+    "authenticatedAt": "2026-07-17T12:00:00.000Z"
+  },
+  "executionIdentity": {
+    "agentPrincipalId": "agent-1",
+    "tenantId": "tenant-1",
+    "resourceScope": "filesystem:/workspace",
+    "sessionId": "execution-session-1",
+    "authMethod": "workload-token",
+    "authenticatedAt": "2026-07-17T12:00:00.000Z"
+  },
+  "executionContext": {
+    "agentPrincipalId": "agent-1",
+    "tenantId": "tenant-1",
+    "resourceScope": "filesystem:/workspace",
+    "sessionId": "execution-session-1",
+    "policyVersion": "policy-1"
+  },
+  "wildcardExecutionContext": {
+    "agentPrincipalId": "agent-1",
+    "tenantId": "tenant-1",
+    "resourceScope": "filesystem:*",
+    "sessionId": "execution-session-1",
+    "policyVersion": "policy-1"
+  },
+  "approvalGrant": {
+    "id": "approval-1",
+    "serverName": "filesystem",
+    "toolName": "read_file",
+    "actionHash": "action-hash-1",
+    "arguments": { "path": "/workspace/readme.md" },
+    "executionContext": {
+      "agentPrincipalId": "agent-1",
+      "tenantId": "tenant-1",
+      "resourceScope": "filesystem:/workspace",
+      "sessionId": "execution-session-1",
+      "policyVersion": "policy-1"
+    },
+    "status": "approved",
+    "requestedAt": "2026-07-17T12:00:00.000Z",
+    "expiresAt": "2026-07-17T12:05:00.000Z",
+    "used": false
+  },
+  "auditEvent": {
+    "id": "audit-1",
+    "timestamp": "2026-07-17T12:00:00.000Z",
+    "eventType": "POLICY_CHECKED",
+    "toolName": "read_file",
+    "serverName": "filesystem"
+  },
+  "adapterInputs": {
+    "authenticatedPrincipal": {
+      "id": "service-1",
+      "kind": "service",
+      "issuer": "ananke-workload-auth"
+    },
+    "runtimeId": "ananke",
+    "requestId": "request-1",
+    "correlationId": "correlation-1"
+  },
+  "unavailableFamilies": [
+    "runtime identity",
+    "runtime registration",
+    "readiness",
+    "health",
+    "protocol range",
+    "compatibility manifest",
+    "delegation descriptor"
+  ],
+  "domainOwnedFamilies": [
+    "policy decision",
+    "approval grant lifecycle",
+    "action outcome",
+    "audit event semantics",
+    "canonical action hashing",
+    "content preflight"
+  ]
+}
+

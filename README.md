@@ -20,9 +20,8 @@ remain authoritative until they adopt this package:
 
 Install and validate locally:
 
-```powershell
-Set-Location "D:\Users\fleur\Project Runtime Contracts"
-npm install
+```text
+npm ci
 npm run validate
 ```
 
@@ -83,5 +82,8 @@ Documentation:
 - [ADR index](docs/decisions/README.md)
 - [Canonical contract matrix](docs/contract-ownership-matrix.md)
 - [Distribution and adoption](docs/distribution.md)
+- [Stage-A adoption baseline](docs/adoption-baseline.md)
+- [Ananke adapter report](docs/ananke-adapter-report.md)
+- [Dependency advisory review](docs/dependency-advisory-review.md)
 - [Downstream migration](docs/downstream-migration.md)
 - [Design gates](docs/design-gates.md)

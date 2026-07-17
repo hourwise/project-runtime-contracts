@@ -731,6 +731,7 @@ implementation-free.
 | `DelegationDescriptor` | authority owner | receiving runtime/audit tooling | grant, principals, audience, scope, purpose, session, validity interval plus one capability/tool/operation reference | expiry follows `expiresAt > issuedAt`; meaning of failure reasons belongs to authority owner |
 | `RuntimeReadiness` | runtime | host/discovery | `ready`, `status` | ready and `not_ready` cannot contradict; readiness is distinct from process health |
 | `CompatibilityManifest` | runtime/package | host, registry, conformance tooling | runtime/package identity, optional client/build identity, version/range identity, package range, `standalone` | protocol fields must agree with the advertised range; manifest does not negotiate or discover |
+| `AdoptionBaselineManifest` | release maintainer after final validation | downstream maintainers and artifact-verification tooling | package/protocol/source identity, proposed tag, tarball filename/digest/size, tool versions, documentation, fixtures, consumer tests, deferrals, gates, classification, validation | describes one immutable package artifact; generated records require a real commit/digest and only passed validation; it is not runtime registration or compatibility negotiation |
 | `StateHandleReference` | state-owning runtime | peers and audit tooling | `handleId` | opaque pointer only; it is not state, authority, or a persistence API |
 
 Unknown object fields continue to be stripped by the plain Zod objects. Closed enum values
@@ -740,6 +741,25 @@ registry lookup. Unknown tagged-union variants and future enum safety remain des
 `IdempotencyPolicy` is a declaration with `none`, `single_use`, and `bounded_replay` modes.
 The latter requires a positive `maxUses`; enforcement, replay storage, and retry decisions
 remain with Ananke or the runtime that owns the operation.
+
+### Adoption-baseline lifecycle and compatibility
+
+`AdoptionBaselineManifest` is created after the final source tree is committed and validation
+has passed. It is immutable evidence for exactly one tarball. The producer records the final Git
+SHA, measured artifact SHA-256 and size, environment versions, included public documentation,
+fixture counts, consumer-test outcomes, deferrals, design gates, and commands. The consumer
+verifies those facts before pinning the artifact.
+
+`recordStatus: "example"` permits the committed illustrative record; `recordStatus:
+"generated"` rejects zero commit/digest placeholders and any non-passing validation result.
+Protocol current/minimum values must equal the supported range endpoints. Documentation paths
+must be repository-relative. Plain-object unknown fields are stripped under the repository's
+general Zod behavior; consumers must not depend on unrecognized fields surviving a parse.
+
+The [example](../examples/adoption-baseline.example.json) is explicitly non-final. The generated
+sidecar is not embedded in its own tarball because that would make the digest self-referential.
+Changing any source or packaged content requires a new commit, artifact digest, and baseline
+record. This metadata does not change peer wire compatibility by itself.
 
 ## Generic outcome and audit references
 

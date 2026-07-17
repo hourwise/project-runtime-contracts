@@ -125,6 +125,14 @@ The descriptive `CompatibilityManifest` record advertising versions, ranges, int
 transports, capabilities, constraints, degraded modes, and tested peers. It is not a
 discovery or negotiation algorithm.
 
+## Adoption Baseline Manifest
+
+The immutable package-artifact evidence record validated by `AdoptionBaselineManifestSchema`.
+It identifies the exact source commit, package and protocol versions, tarball digest and size,
+validation, public documentation, fixture coverage, consumer tests, deferrals, and design gates.
+It is not a `RuntimeRegistration` or `CompatibilityManifest` and does not imply publication or
+downstream adoption.
+
 ## State Handle
 
 An opaque `StateHandleReference` pointing to state owned by another runtime. It carries no

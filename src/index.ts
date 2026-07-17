@@ -40,6 +40,7 @@ export * from "./protocol/ProtocolCompatibility";
 export * from "./protocol/Correlation";
 export * from "./protocol/References";
 export * from "./protocol/CompatibilityManifest";
+export * from "./protocol/AdoptionBaselineManifest";
 export * from "./scope/ResourceScope";
 export * from "./delegation/Delegation";
 

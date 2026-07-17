@@ -1,0 +1,60 @@
+{
+  "schemaVersion": "1.0.0",
+  "recordStatus": "example",
+  "packageName": "project-runtime-contracts",
+  "futurePackageName": "@fates/runtime-contracts",
+  "packageVersion": "0.4.0",
+  "protocolVersion": "1.4.0",
+  "minimumSupportedProtocolVersion": "1.0.0",
+  "supportedProtocolRange": {
+    "minimum": "1.0.0",
+    "maximum": "1.4.0"
+  },
+  "sourceRepository": "https://github.com/hourwise/project-runtime-contracts",
+  "sourceCommit": "0000000000000000000000000000000000000000",
+  "proposedTag": "runtime-contracts-adoption-v0.4.0-protocol-1.4.0",
+  "artifactFilename": "project-runtime-contracts-0.4.0.tgz",
+  "artifactSha256": "0000000000000000000000000000000000000000000000000000000000000000",
+  "artifactSizeBytes": 1,
+  "generatedAt": "1970-01-01T00:00:00.000Z",
+  "nodeVersion": "example-only",
+  "npmVersion": "example-only",
+  "includedDocumentation": [
+    "README.md",
+    "CHANGELOG.md",
+    "docs/adoption-baseline.md",
+    "docs/ananke-adapter-report.md"
+  ],
+  "fixtureFamilies": [
+    {
+      "id": "principal-identity",
+      "caseCount": 5
+    }
+  ],
+  "consumerTests": [
+    {
+      "consumer": "Project-Ananke",
+      "sourceCommit": "1e38e4580ca0f8db46a35dce67362e0e2467d794",
+      "result": "adapter_required",
+      "report": "docs/ananke-adapter-report.md"
+    }
+  ],
+  "deferredContractFamilies": [
+    "content-preflight"
+  ],
+  "designGates": [
+    "scoped-package-publication-authority",
+    "content-preflight-cross-owner-contract",
+    "unknown-enum-and-union-receiving-policy"
+  ],
+  "releaseClassification": "pre_release_correction_protocol_1_4",
+  "contentPreflightIncluded": false,
+  "validation": [
+    {
+      "command": "npm run validate",
+      "result": "not_run",
+      "summary": "Example only; the final generator replaces this with measured evidence."
+    }
+  ]
+}
+

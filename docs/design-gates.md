@@ -25,10 +25,14 @@ before a future change turns them into normative protocol behaviour.
 - **Idempotency vocabulary:** `none`, `single_use`, and `bounded_replay` are portable
   declaration values for this working tree; Ananke must confirm their final safety and
   replay semantics before treating them as an enforcement contract.
-- **Release classification for tightened draft schemas:** strict semantic versions,
-  identity-range consistency, agent-only delegation, and required delegation correlation
-  narrow inputs. Maintainers must decide whether these are pre-release corrections,
-  compatibility-named additions, or a protocol-major change before publication.
+
+## Closed gate: release classification
+
+Strict semantic versions, identity-range consistency, agent-only delegation, required
+delegation correlation, scope invariants, and manifest consistency are accepted as pre-release
+corrections within unreleased protocol `1.4.0`. No public tag, npm publication, prior immutable
+artifact, or established downstream package dependency was found. See
+[ADR-0005](./decisions/ADR-0005-adoption-baseline-release-classification.md).
 
 ## Content-preflight review decision
 
@@ -43,7 +47,9 @@ correlation/audit references. No dedicated content-preflight schema is added in 
 - Horae may later own routing/order policy, but its reviewed content-preflight ADR is proposed.
 - Moirae Code owns presentation and approval UX, not the portable decision meaning.
 
-Before downstream adoption, the owners must agree on which fields are neutral transport,
-whether a receipt is authoritative or referential, expiry/staleness rules, destination and
-admission semantics, and how unknown decision values are handled. Until then, copying Ananke's
-local contract here would create a competing canonical policy surface.
+Before later content-preflight adoption, the owners must agree on which fields are neutral
+transport, whether a receipt is authoritative or referential, expiry/staleness rules, destination
+and admission semantics, and how unknown decision values are handled. This gate does not block
+adoption of identity, scope, correlation, delegation, registration, readiness, health, or
+negotiation. Until the content-specific decision is accepted, copying Ananke's local contract
+here would create a competing canonical policy surface.

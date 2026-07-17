@@ -19,9 +19,14 @@
     "docs/distribution.md",
     "docs/downstream-migration.md",
     "docs/design-gates.md",
+    "docs/adoption-baseline.md",
+    "docs/ananke-adapter-report.md",
+    "docs/dependency-advisory-review.md",
     "docs/decisions",
     "docs/ADR-XXXX-runtime-contracts-content-surface-preflight.md",
+    "examples/adoption-baseline.example.json",
     "examples/compatibility-manifest.json",
+    "fixtures/adoption-v1",
     "fixtures/compatibility-manifest"
   ],
   "exports": {
@@ -38,9 +43,13 @@
     "typecheck": "tsc --noEmit",
     "test": "vitest run",
     "test:watch": "vitest",
-    "validate": "npm run clean && npm run typecheck && npm run test && npm run build && npm run pack:check",
+    "validate": "npm run clean && npm run typecheck && npm run test && npm run build && npm run fixtures:validate && npm run package:verify && npm run pack:check",
+    "fixtures:validate": "vitest run src/protocol/AdoptionFixtures.test.ts",
+    "package:verify": "node scripts/verify-package-content.mjs",
     "pack:check": "npm pack --dry-run",
     "pack:smoke": "node scripts/packed-consumer-smoke.mjs",
+    "ananke:consumer": "node scripts/ananke-packed-consumer.mjs",
+    "baseline:create": "node scripts/create-adoption-baseline.mjs",
     "prepublishOnly": "npm run build"
   },
   "keywords": [

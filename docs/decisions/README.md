@@ -10,6 +10,11 @@ Status rules used in this repository:
 
 ## Accepted ADRs
 
+- [ADR-0005: Adoption Baseline Release Classification](./ADR-0005-adoption-baseline-release-classification.md)
+  Status: Accepted
+  Date: 2026-07-17
+  Scope: classifies the tightened, unreleased protocol 1.4 validators as pre-release
+  corrections and defines the first immutable Stage-A adoption baseline boundary.
 - [ADR-0004: Runtime Contracts Ownership of Dual-Principal Delegation and Compatibility](./ADR-0004-runtime-contracts-ownership-dual-principal-delegation-compatibility.md)
   Status: Accepted (partially implemented; downstream adoption and composed tests pending)
   Date: 2026-07-14

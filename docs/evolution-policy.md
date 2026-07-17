@@ -172,19 +172,19 @@ or date, the changelog should say so rather than inventing one.
 - The repository does not define whether unknown future union variants should be ignored,
   rejected, or surfaced as opaque data.
 
-## Consolidation additions
+## Adoption-baseline classification
 
 Most identity, scope, correlation, readiness, and manifest work in the consolidation is
 additive. The final correction pass also tightens existing draft inputs: protocol versions
 reject leading zeroes, `RuntimeIdentity` validates repeated range fields, agent delegation
 requires an agent-specific context plus `correlationId`, and delegation descriptors reject a
-non-agent acting principal. Under this policy those are breaking changes to the draft surface,
-even though no reviewed sibling currently depends on this package.
+non-agent acting principal.
 
-Before release, maintainers must either accept these as pre-release corrections, introduce
-compatibility aliases/new contract names, or increment the protocol major version. This
-working tree does not silently choose among those release decisions, claim publication, or
-invent a support window.
+[ADR-0005](./decisions/ADR-0005-adoption-baseline-release-classification.md) accepts these as
+pre-release corrections within the still-unreleased protocol `1.4.0`. This is based on the
+absence of a public tag, npm publication, prior immutable artifact, or established downstream
+package dependency. It does not establish a general exception for narrowing inputs after an
+adoption baseline exists.
 
 The closed `PrincipalKind`, readiness, dependency-state, and delegation-failure enums still
 require explicit review before widening. `ResourceScope` rejects wildcard syntax because no
