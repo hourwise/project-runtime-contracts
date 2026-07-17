@@ -7,6 +7,7 @@
  * - Patch version changes are non-breaking
  */
 import { z } from "zod";
+import { SemanticVersionSchema } from "./ProtocolVersion";
 
 /**
  * Parse a semantic version string into components.
@@ -25,6 +26,8 @@ export function parseVersion(version: string): {
   minor: number;
   patch: number;
 } | null {
+  if (!SemanticVersionSchema.safeParse(version).success) return null;
+
   const match = version.match(/^(\d+)\.(\d+)\.(\d+)$/);
   if (!match) return null;
 
@@ -237,7 +240,7 @@ export const ProtocolNegotiationFailureReasonSchema = z.enum([
 ]);
 
 export const ProtocolNegotiationResultSchema = z.discriminatedUnion("compatible", [
-  z.object({ compatible: z.literal(true), negotiatedVersion: z.string().regex(/^\d+\.\d+\.\d+$/) }),
+  z.object({ compatible: z.literal(true), negotiatedVersion: SemanticVersionSchema }),
   z.object({ compatible: z.literal(false), reason: ProtocolNegotiationFailureReasonSchema, details: z.string().optional() }),
 ]);
 

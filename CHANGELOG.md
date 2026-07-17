@@ -6,6 +6,11 @@ it is not fabricated here.
 
 ## Unreleased
 
+- Tightened protocol semantic-version syntax and runtime identity range consistency; added an
+  agent-specific dual-principal context, delegation correlation requirements, extended portable
+  correlation references, compatibility-manifest fixtures, and packed public documentation.
+  The strict version and delegation changes narrow the prior draft surface; release maintainers
+  must classify them as pre-release corrections or assign an appropriate protocol migration.
 - Added implementation-free principal/context, explicit resource-scope, correlation/reference,
   delegation, idempotency, opaque state-handle, readiness, and compatibility-manifest schemas with source-level negative and
   round-trip coverage. No package or protocol release number is claimed by this entry.

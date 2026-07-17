@@ -15,7 +15,21 @@ try {
   const packagePath = join(directory, tarball);
   writeFileSync(join(directory, "package.json"), JSON.stringify({ name: "packed-consumer", private: true, type: "module" }));
   runNpm(["install", "--ignore-scripts", packagePath], { cwd: directory, stdio: "inherit" });
-  execFileSync(process.execPath, ["--input-type=module", "-e", "import('project-runtime-contracts').then(({ ProtocolVersion, PrincipalKind }) => { if (!ProtocolVersion.version || !PrincipalKind.Agent) process.exit(1); })"], { cwd: directory, stdio: "inherit" });
+  const importCheck = `
+    import('project-runtime-contracts').then((contracts) => {
+      const required = [
+        'AgentExecutionContextSchema',
+        'CompatibilityManifestSchema',
+        'DelegationRequestSchema',
+        'PrincipalKind',
+        'ProtocolVersion',
+        'ResourceScopeSchema',
+        'negotiateDetailed',
+      ];
+      if (required.some((name) => contracts[name] === undefined)) process.exit(1);
+    });
+  `;
+  execFileSync(process.execPath, ["--input-type=module", "-e", importCheck], { cwd: directory, stdio: "inherit" });
 } finally {
   rmSync(directory, { recursive: true, force: true });
 }

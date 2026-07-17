@@ -40,6 +40,20 @@ describe("RuntimeIdentity Schema", () => {
   });
 
   describe("Invalid runtime identities", () => {
+    it("should reject malformed protocol versions and inconsistent supported ranges", () => {
+      expect(() => RuntimeIdentitySchema.parse({
+        runtime: "ananke",
+        version: "1.0.0",
+        protocolVersion: "01.4.0",
+      })).toThrow();
+      expect(() => RuntimeIdentitySchema.parse({
+        runtime: "ananke",
+        version: "1.0.0",
+        protocolVersion: "1.4.0",
+        minimumProtocolVersion: "1.0.0",
+        supportedProtocolRange: { minimum: "1.0.0", maximum: "1.3.0" },
+      })).toThrow();
+    });
     it("should reject identity without runtime", () => {
       expect(() =>
         RuntimeIdentitySchema.parse({

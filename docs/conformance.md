@@ -78,6 +78,7 @@ Current evidence-backed examples in the repository:
 - [`tests/sample-import.ts`](../tests/sample-import.ts)
 - inline examples in the exported source files under [`src/`](../src/)
 - schema tests under [`src/**/*.test.ts`](../src/)
+- [example compatibility manifest](../examples/compatibility-manifest.json)
 
 These are examples, not a formal fixture registry.
 
@@ -109,7 +110,6 @@ Implemented but without a dedicated schema test file today:
 
 - `ProjectIdentity`
 - `RuntimeMetadata`
-- `RuntimeRegistration`
 - `RuntimeProfile`
 - `RuntimeKind`
 - `Version`
@@ -119,18 +119,19 @@ Implication:
 - these contracts are implemented and exported, but their conformance evidence is weaker
   than the families with explicit parse/negative/round-trip tests.
 
-## Proposed But Not Yet Implemented Conformance Evidence
+## Fixture Status
 
-The roadmap and build plan reference future fixture work, but the repository does not yet
-contain the proposed `tests/fixtures/` structure.
+The repository contains one targeted positive/negative machine-readable fixture family for
+`CompatibilityManifest` under [`fixtures/compatibility-manifest`](../fixtures/compatibility-manifest).
+It does not yet contain a protocol-wide canonical fixture registry.
 
-Proposed future evidence, not current repository reality:
+Proposed future evidence:
 
-- canonical positive and negative fixture directories;
+- canonical positive and negative fixtures for every exported family;
 - consumer-compatibility payload suites for Ananke, Mnemosyne, Horae, and Moirae Code;
 - release-by-release conformance fixture baselines.
 
-Do not describe those fixture systems as already present.
+Do not describe the targeted manifest fixtures as full protocol conformance evidence.
 
 ## Suggested Third-Party Test Matrix
 
@@ -162,7 +163,7 @@ implementation that claims "full protocol conformance" should either:
 
 ## Open Questions
 
-- No canonical fixture bundle exists yet.
+- No protocol-wide canonical fixture bundle exists yet.
 - No standardized wire payload exists for negotiation failure.
 - No repository-wide rule defines how unknown capability IDs should be surfaced to users or
   policy systems after schema validation succeeds.

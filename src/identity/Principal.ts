@@ -49,6 +49,27 @@ export type ServicePrincipal = z.infer<typeof ServicePrincipalSchema>;
 export type AgentPrincipal = z.infer<typeof AgentPrincipalSchema>;
 export type RuntimePrincipal = z.infer<typeof RuntimePrincipalSchema>;
 
+/** The authenticated identity for a delegated agent action. */
+export const AuthenticatedPrincipalSchema = z.union([
+  HumanPrincipalSchema,
+  ServicePrincipalSchema,
+]);
+
+export type AuthenticatedPrincipal = z.infer<typeof AuthenticatedPrincipalSchema>;
+
+/** The agent identity that remains distinct from the authenticated principal. */
+export const ActingAgentPrincipalSchema = AgentPrincipalSchema;
+export type ActingAgentPrincipal = AgentPrincipal;
+
+/** Principal pair for agent-executed requests; identity alone does not grant authority. */
+export const DualPrincipalContextSchema = z.object({
+  authenticatedPrincipal: AuthenticatedPrincipalSchema,
+  actingPrincipal: ActingAgentPrincipalSchema,
+  representedPrincipal: PrincipalIdentitySchema.optional(),
+});
+
+export type DualPrincipalContext = z.infer<typeof DualPrincipalContextSchema>;
+
 /**
  * Cross-runtime application context. Both authenticated and acting principals are required;
  * the schema does not authenticate either principal or infer authority from identity.
@@ -67,8 +88,22 @@ export const ExecutionContextSchema = z.object({
 
 export type ExecutionContext = z.infer<typeof ExecutionContextSchema>;
 
+/**
+ * Application context for an agent-executed request. This is not an MCP session,
+ * authentication session, credential, or proof of authority.
+ */
+export const AgentExecutionContextSchema = ExecutionContextSchema.extend({
+  authenticatedPrincipal: AuthenticatedPrincipalSchema,
+  actingPrincipal: ActingAgentPrincipalSchema,
+});
+
+export type AgentExecutionContext = z.infer<typeof AgentExecutionContextSchema>;
+
 export const isPrincipalIdentity = (value: unknown): value is PrincipalIdentity =>
   PrincipalIdentitySchema.safeParse(value).success;
 
 export const isExecutionContext = (value: unknown): value is ExecutionContext =>
   ExecutionContextSchema.safeParse(value).success;
+
+export const isAgentExecutionContext = (value: unknown): value is AgentExecutionContext =>
+  AgentExecutionContextSchema.safeParse(value).success;

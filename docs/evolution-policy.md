@@ -174,10 +174,16 @@ or date, the changelog should say so rather than inventing one.
 
 ## Consolidation additions
 
-The identity, scope, correlation, delegation, readiness, and manifest schemas in the
-current working tree are additive fields and new exports. They do not change the required
-fields of existing contracts. A release that includes them must record the package/protocol
-version decision in the changelog; this working tree does not claim a published release or
+Most identity, scope, correlation, readiness, and manifest work in the consolidation is
+additive. The final correction pass also tightens existing draft inputs: protocol versions
+reject leading zeroes, `RuntimeIdentity` validates repeated range fields, agent delegation
+requires an agent-specific context plus `correlationId`, and delegation descriptors reject a
+non-agent acting principal. Under this policy those are breaking changes to the draft surface,
+even though no reviewed sibling currently depends on this package.
+
+Before release, maintainers must either accept these as pre-release corrections, introduce
+compatibility aliases/new contract names, or increment the protocol major version. This
+working tree does not silently choose among those release decisions, claim publication, or
 invent a support window.
 
 The closed `PrincipalKind`, readiness, dependency-state, and delegation-failure enums still

@@ -85,9 +85,3 @@ Documentation:
 - [Distribution and adoption](docs/distribution.md)
 - [Downstream migration](docs/downstream-migration.md)
 - [Design gates](docs/design-gates.md)
-
-Additional repository planning and history:
-
-- [Versioning notes and protocol history](docs/VERSIONING.md)
-- [Roadmap](docs/ROADMAP.md)
-- [Build plan](docs/BUILD_PLAN.md)

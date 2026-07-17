@@ -1,0 +1,14 @@
+{
+  "manifestSchemaVersion": "1.0.0",
+  "runtimeName": "fixture-runtime",
+  "runtimeVersion": "2.3.0",
+  "packageVersion": "2.3.0",
+  "protocolVersion": "1.4.0",
+  "minimumSupportedProtocolVersion": "1.0.0",
+  "supportedProtocolRange": {
+    "minimum": "1.0.0",
+    "maximum": "1.3.0"
+  },
+  "requiredRuntimeContractsVersionRange": ">=0.4.0 <1.0.0",
+  "standalone": true
+}

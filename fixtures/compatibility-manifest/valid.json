@@ -1,0 +1,28 @@
+{
+  "manifestSchemaVersion": "1.0.0",
+  "runtimeName": "fixture-runtime",
+  "runtimeVersion": "2.3.0",
+  "packageVersion": "2.3.0",
+  "buildVersion": "fixture-build",
+  "protocolVersion": "1.4.0",
+  "minimumSupportedProtocolVersion": "1.0.0",
+  "preferredProtocolVersion": "1.3.0",
+  "supportedProtocolRange": {
+    "minimum": "1.0.0",
+    "maximum": "1.4.0"
+  },
+  "requiredRuntimeContractsVersionRange": ">=0.4.0 <1.0.0",
+  "optionalIntegrations": ["mnemosyne"],
+  "requiredIntegrations": ["ananke"],
+  "supportedTransports": ["mcp", "stdio"],
+  "standalone": true,
+  "testedPeers": [
+    {
+      "runtime": "ananke",
+      "version": "0.1.0",
+      "protocolVersion": "1.4.0",
+      "commit": "fixture-commit",
+      "testedAt": "2026-07-14T12:00:00Z"
+    }
+  ]
+}

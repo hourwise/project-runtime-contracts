@@ -11,10 +11,10 @@ The detailed consolidated family mapping is in the [canonical contract ownership
 | Semantic area | Owner | Evidence and status | Boundary |
 | --- | --- | --- | --- |
 | Shared interoperability shapes, schemas, enums, protocol vocabulary, version metadata, and compatibility helpers | Project Runtime Contracts | Implemented exports in [`src/index.ts`](../src/index.ts), the package description, and the README | This repository owns representation and validation, not runtime logic. |
-| Action-outcome semantics for Ananke-governed actions | Project Ananke | Documentation-pass authority boundary; [`Result<T>`](../src/results/Result.ts) only supplies the generic success/error envelope | This repository does not export an Ananke action-outcome vocabulary or policy engine. A different runtime owns the meaning of its own outcomes. |
-| Context-pack, memory, source-reference, retrieval, citation, and reliability semantics | Project Mnemosyne | Documentation-pass authority boundary; [`RuntimeSkill`](../src/skill/RuntimeSkill.ts) and `CapabilityCategory.Memory` are shared declarations only | No `ContextPack` or reliability contract is exported here. Mnemosyne ownership is a boundary assignment, not evidence of an implemented context-pack protocol. |
-| Composition selection and orchestration semantics | Project Horae | Documentation-pass authority boundary; [`RuntimeComposition`](../src/runtime/RuntimeComposition.ts) provides the shared record shape | The package does not create compositions, select bindings, or impose an orchestration lifecycle. Horae remains described as a future orchestration plane in [`HORAE_READINESS.md`](./HORAE_READINESS.md). |
-| Host and product behaviour associated with `RUNTIME_NAMES.MOIRA` | Moirae Code | Documentation-pass authority boundary; [`RuntimeNames.ts`](../src/constants/RuntimeNames.ts) establishes only the serialized identifier `moira` | The shared package defines neither product UX nor host policy. See the naming conflict below. |
+| Action-outcome semantics for Ananke-governed actions | Project Ananke | Verified in Ananke's local `OutcomeState`, `FailureReasonCode`, and `Outcome`; [`Result<T>`](../src/results/Result.ts) only supplies the generic success/error envelope | This repository does not export an Ananke action-outcome vocabulary or policy engine. A different runtime owns the meaning of its own outcomes. |
+| Context-pack, memory, source-reference, retrieval, citation, and reliability semantics | Project Mnemosyne | Verified in Mnemosyne's repository boundary; [`RuntimeSkill`](../src/skill/RuntimeSkill.ts) and `CapabilityCategory.Memory` are shared declarations only | No `ContextPack` or reliability contract is exported here. Mnemosyne ownership is a boundary assignment, not evidence of an implemented context-pack protocol. |
+| Composition selection and orchestration semantics | Project Horae | Verified in Horae's local planner, registry, lifecycle, and session packages; [`RuntimeComposition`](../src/runtime/RuntimeComposition.ts) provides the shared record shape | The package does not create compositions, select bindings, or impose an orchestration lifecycle. |
+| Host and product behaviour associated with `RUNTIME_NAMES.MOIRA` | Moirae Code | Verified in Moirae Code's apps, adapters, supervisor, and host documentation; [`RuntimeNames.ts`](../src/constants/RuntimeNames.ts) establishes only the serialized identifier `moira` | The shared package defines neither product UX nor host policy. |
 | Capability and profile semantics | Producing runtime or host | [`Capability`](../src/runtime/Capability.ts), [`RuntimeProfile`](../src/runtime/RuntimeProfile.ts) | The package represents declarations, categories, and references. It does not decide whether a capability is authorized, available, or executable. |
 | Lifecycle correlation, idempotency, and record representation | Project Runtime Contracts | [`RuntimeLifecycle.ts`](../src/lifecycle/RuntimeLifecycle.ts) | The package owns the shared envelope and validation only. Horae or another lifecycle engine owns transition legality, persistence, retries, and operation execution. |
 | Model/speech capability, portable transcript, locale, and provider/model-change representation | Project Runtime Contracts | [`ModelCapability.ts`](../src/model/ModelCapability.ts), [`Speech.ts`](../src/speech/Speech.ts) | The package owns representation and validation. Model selection, context management, confidence calculation, recognition, provider transport, routing, failover, and availability remain external. |
@@ -49,24 +49,17 @@ not make the records' domain effect a package-level decision. For example:
   producer or extension owner.
 - `RuntimeRiskClass` and `SkillTrustState` are declarations; neither enforces a policy.
 
-## Documentation Conflicts
+## Naming
 
-### Moirae Code naming
-
-This documentation uses **Moirae Code** for the host/product boundary, as specified for
-this documentation pass. The stable serialized runtime identifier remains `moira`.
-
-[`RuntimeNames.ts`](../src/constants/RuntimeNames.ts) currently calls that host application
-"Moira Code" in a source comment. That comment is code documentation and cannot be changed
-in this documentation-only pass. It is therefore a remaining source/documentation naming
-conflict, not a reason to rename the `moira` identifier.
+This repository uses **Moirae Code** for the host/product boundary. The stable serialized
+runtime identifier remains `moira`; the identifier is not a product-name spelling.
 
 ### Consumer status
 
-The current README and package description name Project Ananke and Project Mnemosyne as
-consumers. They do not establish Project Horae or Moirae Code as current consumers.
-`HORAE_READINESS.md` calls Horae a future orchestration plane. References to Horae or Moirae
-Code in examples, proposals, and roadmaps are not evidence of current consumption.
+The four sibling manifests reviewed at the commits recorded in the ownership matrix do not
+depend on this package. Horae and Moirae Code retain local competing shapes, while Ananke and
+Mnemosyne also retain local domain schemas. References in examples, proposals, and roadmaps
+are intended-consumer evidence only, not current consumption.
 
 ## Open Questions
 

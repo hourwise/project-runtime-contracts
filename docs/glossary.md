@@ -14,7 +14,7 @@ capabilities, health, and other shared protocol metadata. Repository evidence:
 A client or host application participating in runtime interactions. Current source evidence
 appears in [`src/constants/RuntimeNames.ts`](../src/constants/RuntimeNames.ts), where the
 well-known `moira` runtime is described as the host application or client runtime,
-informally "Moira Code." This documentation uses **Moirae Code** for the product boundary
+formerly described informally as "Moira Code." This documentation uses **Moirae Code** for the product boundary
 specified for this documentation pass; the `moira` serialized identifier is unchanged.
 See the documented naming conflict in [contract ownership](./contract-ownership.md).
 

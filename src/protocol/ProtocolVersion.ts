@@ -3,7 +3,10 @@ import { z } from "zod";
 /** A strict, transport-independent semantic version. */
 export const SemanticVersionSchema = z
   .string()
-  .regex(/^\d+\.\d+\.\d+$/, "Version must use major.minor.patch form");
+  .regex(
+    /^(0|[1-9]\d*)\.(0|[1-9]\d*)\.(0|[1-9]\d*)$/,
+    "Version must use semantic major.minor.patch form without leading zeroes",
+  );
 
 export type SemanticVersion = z.infer<typeof SemanticVersionSchema>;
 

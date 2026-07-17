@@ -16,3 +16,4 @@ jobs:
       - run: npm ci
       - run: npm run validate
       - run: npm run pack:smoke
+      - run: git diff --check

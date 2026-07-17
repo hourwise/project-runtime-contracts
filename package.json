@@ -1,13 +1,28 @@
 {
   "name": "project-runtime-contracts",
   "version": "0.4.0",
-  "description": "Shared runtime protocol contracts for Project Ananke and Project Mnemosyne",
+  "description": "Portable runtime protocol contracts for the Fates ecosystem",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
   "files": [
     "dist",
     "LICENSE",
-    "README.md"
+    "README.md",
+    "CHANGELOG.md",
+    "docs/protocol-specification.md",
+    "docs/version-negotiation.md",
+    "docs/evolution-policy.md",
+    "docs/contract-ownership.md",
+    "docs/contract-ownership-matrix.md",
+    "docs/conformance.md",
+    "docs/glossary.md",
+    "docs/distribution.md",
+    "docs/downstream-migration.md",
+    "docs/design-gates.md",
+    "docs/decisions",
+    "docs/ADR-XXXX-runtime-contracts-content-surface-preflight.md",
+    "examples/compatibility-manifest.json",
+    "fixtures/compatibility-manifest"
   ],
   "exports": {
     ".": {

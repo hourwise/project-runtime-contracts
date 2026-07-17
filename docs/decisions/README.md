@@ -10,6 +10,16 @@ Status rules used in this repository:
 
 ## Accepted ADRs
 
+- [ADR-0004: Runtime Contracts Ownership of Dual-Principal Delegation and Compatibility](./ADR-0004-runtime-contracts-ownership-dual-principal-delegation-compatibility.md)
+  Status: Accepted (partially implemented; downstream adoption and composed tests pending)
+  Date: 2026-07-14
+  Scope: canonical portable principal, delegation, compatibility, idempotency, and state-handle
+  contracts without credential, policy, workflow, or persistence implementation.
+- [ADR-0003: Dual-Principal Identity, Scoped MCP Delegation, and Cross-Runtime Compatibility](./ADR-0003-dual-principal-identity-scoped-mcp-delegation.md)
+  Status: Accepted (partially implemented; enforcement and downstream adoption pending)
+  Date: 2026-07-13
+  Scope: dual-principal identity, scoped MCP delegation, credential-broker boundaries, and
+  cross-repository compatibility requirements.
 - [ADR-0002: Model, Speech, and Portable Locale Contracts](./ADR-0002-model-speech-portable-locale.md)
   Status: Accepted
   Date: 2026-07-12

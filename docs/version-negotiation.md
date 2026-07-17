@@ -23,7 +23,8 @@ The authoritative helper implementation is in
 ### Version parsing
 
 - Only numeric semantic versions in `major.minor.patch` form are accepted.
-- `parseVersion("01.02.03")` currently parses successfully to numeric components.
+- Leading zeroes such as `01.02.03` are rejected, consistent with semantic-version numeric
+  identifier rules.
 - Pre-release and build metadata are not supported by the negotiation helpers even though
   `RuntimeSkill.version` accepts semantic-version suffixes.
 

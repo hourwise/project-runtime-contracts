@@ -1,10 +1,8 @@
 import { z } from "zod";
 import {
+  AgentExecutionContextSchema,
   AgentPrincipalSchema,
-  ExecutionContextSchema,
   HumanPrincipalSchema,
-  PrincipalIdentitySchema,
-  PrincipalKind,
   ServicePrincipalSchema,
 } from "../identity/Principal";
 import { ResourceScopeSchema } from "../scope/ResourceScope";
@@ -102,7 +100,10 @@ const CapabilityReferenceListSchema = z.array(IdentifierSchema).min(1);
 export const DelegationRequestSchema = z
   .object({
     requestId: IdentifierSchema,
-    context: ExecutionContextSchema,
+    context: AgentExecutionContextSchema,
+    correlationId: IdentifierSchema,
+    causationId: IdentifierSchema.optional(),
+    actionId: IdentifierSchema.optional(),
     audience: IdentifierSchema,
     capabilityIds: CapabilityReferenceListSchema.optional(),
     toolIds: CapabilityReferenceListSchema.optional(),
@@ -135,7 +136,7 @@ export const DelegationDescriptorSchema = z
     issuer: IdentifierSchema,
     subject: IdentifierSchema,
     delegatingPrincipal: DelegatingPrincipalSchema,
-    actingPrincipal: PrincipalIdentitySchema,
+    actingPrincipal: AgentPrincipalSchema,
     audience: IdentifierSchema,
     capabilityIds: CapabilityReferenceListSchema.optional(),
     toolIds: CapabilityReferenceListSchema.optional(),
@@ -162,14 +163,6 @@ export const DelegationDescriptorSchema = z
         code: z.ZodIssueCode.custom,
         path: ["capabilityIds"],
         message: "Delegation descriptor requires a capability, tool, or operation reference",
-      });
-    }
-
-    if (grant.actingPrincipal.kind === PrincipalKind.Agent && grant.actingPrincipal.id.length === 0) {
-      context.addIssue({
-        code: z.ZodIssueCode.custom,
-        path: ["actingPrincipal", "id"],
-        message: "Agent principal must have a non-empty identifier",
       });
     }
 

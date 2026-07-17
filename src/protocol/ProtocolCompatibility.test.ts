@@ -26,8 +26,8 @@ describe("Protocol Compatibility Utilities", () => {
       expect(parseVersion("invalid")).toBeNull();
     });
 
-    it("should handle leading zeros", () => {
-      expect(parseVersion("01.02.03")).toEqual({ major: 1, minor: 2, patch: 3 });
+    it("should reject leading zeros that are invalid in semantic versions", () => {
+      expect(parseVersion("01.02.03")).toBeNull();
     });
   });
 

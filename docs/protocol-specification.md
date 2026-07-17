@@ -15,7 +15,7 @@ policy, memory retrieval semantics, host UX, or transport implementation behavio
 ## General Conventions
 
 - Most public object contracts are implemented as `z.object(...)` schemas. The exported
-  `Result<T>` factory is a union of object schemas; `RuntimeProtocol` is a TypeScript
+  `Result<T>` factory is a discriminated union of object schemas; `RuntimeProtocol` is a TypeScript
   interface; and `ProtocolVersion` and `RUNTIME_NAMES` are exported values.
 - Required fields are the non-optional schema members in the exported source files.
 - Optional fields may be omitted; the current schemas do not inject implicit runtime defaults.
@@ -83,8 +83,8 @@ Unknown-value behaviour:
 
 Compatibility implications:
 
-- Package version and protocol version are separate concepts; package `0.4.0` currently
-  publishes protocol `1.4.0`.
+- Package version and protocol version are separate concepts; the working tree at package
+  `0.4.0` currently exposes protocol `1.4.0` without claiming registry publication.
 - Protocol compatibility is range-based and symmetric in the implemented helper functions.
 - The repository does not define a standard wire payload for reporting negotiation failure.
 
@@ -112,7 +112,7 @@ Semantic owner: this repository for shape; runtime-specific identity meaning rem
 
 | Contract | Required fields | Optional fields | Invariants |
 | --- | --- | --- | --- |
-| `RuntimeIdentity` | `runtime`, `version`, `protocolVersion` | `minimumProtocolVersion`, `packageVersion`, `buildVersion`, `supportedProtocolRange`, `optionalIntegrations`, `requiredIntegrations`, `standalone`, `kind`, `instanceId`, `displayName`, `capabilities`, `metadata` | required strings must be non-empty |
+| `RuntimeIdentity` | `runtime`, `version`, `protocolVersion` | `minimumProtocolVersion`, `packageVersion`, `buildVersion`, `supportedProtocolRange`, `optionalIntegrations`, `requiredIntegrations`, `standalone`, `kind`, `instanceId`, `displayName`, `capabilities`, `metadata` | protocol fields use strict semantic versions; minimum/current use one major and ordered ranges must agree with repeated fields |
 | `ProjectIdentity` | `id`, `name`, `rootPath` | none | required strings must be non-empty |
 | `RuntimeMetadata` | none | `displayName`, `description`, `homepageUrl`, `repositoryUrl`, `documentationUrl`, `labels`, `annotations` | no URL normalization is performed |
 
@@ -185,8 +185,8 @@ Validation:
 
 - `CapabilityCategory`, `CapabilityExposure`, `RuntimeTransport`,
   `RuntimeProfileMode`, and `CapabilityDiscoveryMode` are all closed enums.
-- `RuntimeRegistration` currently has no dedicated schema test file, but it is used in the
-  README example and [`tests/sample-import.ts`](../tests/sample-import.ts).
+- `RuntimeRegistration` has dedicated tests for identity-range consistency and a standalone
+  runtime degraded only by an unavailable optional integration.
 - `RuntimeProfile` currently has no dedicated schema test file.
 - `RuntimeEndpoint` does not require a `url`, `command`, or `args` for any particular
   `transport`; transport-specific endpoint completeness is outside this schema.
@@ -682,7 +682,6 @@ Implemented but not covered by a dedicated schema test file:
 
 - `ProjectIdentity`
 - `RuntimeMetadata`
-- `RuntimeRegistration`
 - `RuntimeProfile`
 - `RuntimeKind`
 - `Version`
@@ -724,14 +723,14 @@ implementation-free.
 
 | Contract | Producer | Consumer | Required fields | Semantic owner and invariants |
 | --- | --- | --- | --- | --- |
-| `PrincipalIdentity` | host/runtime | peers and audit tooling | `id`, `kind` | identity is descriptive; no authority is inferred; `kind` is closed |
+| `PrincipalIdentity`, `DualPrincipalContext`, `AgentExecutionContext` | host/runtime | peers and audit tooling | principal IDs/kinds; agent context also requires runtime and session | generic identity is descriptive; agent-executed requests keep authenticated human/service and acting agent identities separate |
 | `ExecutionContext` | host/runtime | participating runtimes | authenticated and acting principals, `runtimeId`, `sessionId` | both principals are explicit; authentication and representation policy remain external |
 | `ResourceScope` | delegating runtime/host | policy and receiving runtime | `mode` | bounded mode needs a boundary; unscoped mode has none; wildcard syntax is rejected |
-| `CorrelationContext` | emitting runtime | peers/audit tooling | `requestId`, `correlationId` | identifiers are opaque non-empty references; generation and uniqueness are producer-owned |
-| `DelegationRequest` | requester | authority owner | request/context/audience/scope/purpose/time plus one capability/tool/operation reference | shape only; no grant issuance or enforcement |
+| `CorrelationContext` | emitting runtime | peers/audit tooling | `requestId`, `correlationId` | optional causation/session/action/workflow/execution/step/attempt and authority/audit references are opaque; generation and uniqueness are producer-owned |
+| `DelegationRequest` | requester | authority owner | request/correlation IDs, agent context, audience, scope, purpose, time, plus one capability/tool/operation reference | shape only; no grant issuance or enforcement |
 | `DelegationDescriptor` | authority owner | receiving runtime/audit tooling | grant, principals, audience, scope, purpose, session, validity interval plus one capability/tool/operation reference | expiry follows `expiresAt > issuedAt`; meaning of failure reasons belongs to authority owner |
 | `RuntimeReadiness` | runtime | host/discovery | `ready`, `status` | ready and `not_ready` cannot contradict; readiness is distinct from process health |
-| `CompatibilityManifest` | runtime/package | host, registry, conformance tooling | runtime/package identity, optional client identity, version/range identity, package range, `standalone` | protocol fields must agree with the advertised range; manifest does not negotiate or discover |
+| `CompatibilityManifest` | runtime/package | host, registry, conformance tooling | runtime/package identity, optional client/build identity, version/range identity, package range, `standalone` | protocol fields must agree with the advertised range; manifest does not negotiate or discover |
 | `StateHandleReference` | state-owning runtime | peers and audit tooling | `handleId` | opaque pointer only; it is not state, authority, or a persistence API |
 
 Unknown object fields continue to be stripped by the plain Zod objects. Closed enum values

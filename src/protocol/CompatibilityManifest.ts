@@ -27,6 +27,7 @@ export const CompatibilityManifestSchema = z
     clientName: IdentifierSchema.optional(),
     clientVersion: IdentifierSchema.optional(),
     packageVersion: IdentifierSchema,
+    buildVersion: IdentifierSchema.optional(),
     protocolVersion: SemanticVersionSchema,
     minimumSupportedProtocolVersion: SemanticVersionSchema,
     preferredProtocolVersion: SemanticVersionSchema.optional(),

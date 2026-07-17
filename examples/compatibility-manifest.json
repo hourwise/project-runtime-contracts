@@ -1,0 +1,27 @@
+{
+  "manifestSchemaVersion": "1.0.0",
+  "runtimeName": "ananke",
+  "runtimeVersion": "0.1.0",
+  "packageVersion": "0.1.0",
+  "buildVersion": "example-build",
+  "protocolVersion": "1.4.0",
+  "minimumSupportedProtocolVersion": "1.0.0",
+  "preferredProtocolVersion": "1.4.0",
+  "supportedProtocolRange": {
+    "minimum": "1.0.0",
+    "maximum": "1.4.0"
+  },
+  "requiredRuntimeContractsVersionRange": ">=0.4.0 <1.0.0",
+  "optionalIntegrations": ["mnemosyne", "horae"],
+  "supportedTransports": ["mcp", "stdio"],
+  "capabilities": [
+    {
+      "id": "approval",
+      "name": "Approval",
+      "version": "0.1.0",
+      "category": "approval"
+    }
+  ],
+  "standalone": true,
+  "knownConstraints": ["Example data; not a compatibility claim"]
+}

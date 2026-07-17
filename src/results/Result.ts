@@ -41,7 +41,7 @@ export type Result<T> =
 export const createResultSchema = <T extends z.ZodTypeAny>(
   dataSchema?: T
 ) =>
-  z.union([
+  z.discriminatedUnion("success", [
     z.object({
       success: z.literal(true),
       data: dataSchema || z.any(),

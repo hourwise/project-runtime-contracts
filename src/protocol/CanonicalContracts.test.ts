@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { PrincipalKind, ExecutionContextSchema } from "../identity/Principal";
+import { AgentExecutionContextSchema, PrincipalKind, ExecutionContextSchema } from "../identity/Principal";
 import { ResourceScopeSchema } from "../scope/ResourceScope";
 import { DelegationDescriptorSchema, DelegationRequestSchema, IdempotencyPolicySchema } from "../delegation/Delegation";
 import { CorrelationContextSchema } from "./Correlation";
@@ -17,6 +17,15 @@ describe("canonical cross-runtime contracts", () => {
   it("requires both principals and a session in execution context", () => {
     expect(ExecutionContextSchema.parse(context).actingPrincipal.id).toBe("agent-1");
     expect(() => ExecutionContextSchema.parse({ ...context, actingPrincipal: undefined })).toThrow();
+    expect(AgentExecutionContextSchema.parse(context).actingPrincipal.kind).toBe(PrincipalKind.Agent);
+    expect(AgentExecutionContextSchema.parse({
+      ...context,
+      authenticatedPrincipal: { id: "service-1", kind: PrincipalKind.Service },
+    }).authenticatedPrincipal.kind).toBe(PrincipalKind.Service);
+    expect(() => AgentExecutionContextSchema.parse({
+      ...context,
+      actingPrincipal: { id: "user-2", kind: PrincipalKind.Human },
+    })).toThrow();
   });
 
   it("rejects implicit and wildcard resource scopes", () => {
@@ -42,13 +51,19 @@ describe("canonical cross-runtime contracts", () => {
     };
     expect(DelegationDescriptorSchema.parse(base).grantId).toBe("grant-1");
     expect(() => DelegationDescriptorSchema.parse({ ...base, expiresAt: base.issuedAt })).toThrow();
-    expect(() => DelegationRequestSchema.parse({ requestId: "r-1", context, audience: "provider-x", resourceScope: { mode: "unscoped" }, purpose: "answer", requestedAt: "2026-01-01T00:00:00Z" })).toThrow();
+    expect(() => DelegationDescriptorSchema.parse({
+      ...base,
+      actingPrincipal: { id: "user-2", kind: PrincipalKind.Human },
+    })).toThrow();
+    expect(DelegationRequestSchema.parse({ requestId: "r-1", correlationId: "c-1", context, audience: "provider-x", capabilityIds: ["model.invoke"], resourceScope: { mode: "bounded", projectId: "p-1" }, purpose: "answer", requestedAt: "2026-01-01T00:00:00Z" }).correlationId).toBe("c-1");
+    expect(() => DelegationRequestSchema.parse({ requestId: "r-1", correlationId: "c-1", context, audience: "provider-x", resourceScope: { mode: "unscoped" }, purpose: "answer", requestedAt: "2026-01-01T00:00:00Z" })).toThrow();
+    expect(() => DelegationRequestSchema.parse({ requestId: "r-1", context, audience: "provider-x", capabilityIds: ["model.invoke"], resourceScope: { mode: "bounded", projectId: "p-1" }, purpose: "answer", requestedAt: "2026-01-01T00:00:00Z" })).toThrow();
     expect(IdempotencyPolicySchema.parse({ mode: "bounded_replay", maxUses: 2 }).maxUses).toBe(2);
     expect(() => IdempotencyPolicySchema.parse({ mode: "bounded_replay" })).toThrow();
   });
 
   it("requires request and correlation identifiers", () => {
-    expect(CorrelationContextSchema.parse({ requestId: "r-1", correlationId: "c-1" }).requestId).toBe("r-1");
+    expect(CorrelationContextSchema.parse({ requestId: "r-1", correlationId: "c-1", workflowId: "w-1", executionId: "e-1", stepId: "s-1", attemptId: "a-1" }).requestId).toBe("r-1");
     expect(() => CorrelationContextSchema.parse({ requestId: "r-1" })).toThrow();
   });
 

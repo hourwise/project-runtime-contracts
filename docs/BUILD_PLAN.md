@@ -34,9 +34,10 @@ test evidence:
 - The package and protocol values are `0.2.0` and `1.2.0` respectively, as recorded in
   [`CHANGELOG.md`](../CHANGELOG.md).
 
-The repository does **not** currently contain the proposed `tests/fixtures/` directory,
-consumer-compatibility payload suites, or a formal external consumer conformance record.
-Those are planned evidence requirements, not completed 1.2.0 artefacts. See
+The repository contains targeted valid/invalid `CompatibilityManifest` fixtures under
+`fixtures/compatibility-manifest`, but not
+protocol-wide consumer-compatibility payload suites or a formal external consumer conformance
+record. Those broader items are planned evidence requirements, not completed 1.2.0 artefacts. See
 [conformance](./conformance.md) for the implemented-versus-proposed distinction.
 
 ### 1.3.0: implemented and source-tested
@@ -164,7 +165,8 @@ tests/
 ```
 
 Keep a contract family in one module until its size or independent versioning justifies splitting it.
-The `tests/fixtures/` entries are proposed; they are not present in the current tree.
+Only the targeted compatibility-manifest fixture family under `fixtures/` is present; the broader proposed
+positive/negative fixture layout remains future work.
 
 ## 4. Delivery sequence
 

@@ -7,7 +7,7 @@
  * - `ananke`: Policy and authorization decision engine.
  * - `mnemosyne`: Memory and knowledge management runtime.
  * - `horae`: Orchestration and task management runtime.
- * - `moira`: Host application or client runtime (informally: "Moira Code").
+ * - `moira`: Host application or client runtime (Moirae Code).
  *
  * @example
  * ```ts
