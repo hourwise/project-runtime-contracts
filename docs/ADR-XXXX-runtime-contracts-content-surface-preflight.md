@@ -1,9 +1,9 @@
-# ADR-XXXX: Content Surface Preflight Contracts
+# ADR-XXXX: Project Adrasteia Content Surface Preflight Contracts
 
 - **Status:** Proposed
 - **Date:** 2026-07-12
-- **Decision owners:** Project Runtime Contracts maintainers
-- **Applies to:** Project Runtime Contracts, Project Horae, Project Ananke, Project Mnemosyne, Moirae Code
+- **Decision owners:** Project Adrasteia maintainers
+- **Applies to:** Project Adrasteia, Project Horae, Project Ananke, Project Mnemosyne, Moirae Code
 - **Related concepts:** typed outcomes, runtime identity, audit events, capability discovery, provenance
 
 ## Context
@@ -14,7 +14,7 @@ A tool call may be correctly authorised while the content returned by that tool 
 
 ## Decision
 
-Project Runtime Contracts will define a common **Content Surface Preflight** contract separating observation, decision, receipt, and typed outcome.
+Project Adrasteia may define a common **Content Surface Preflight** contract separating observation, decision, receipt, and typed outcome, subject to the existing cross-owner gate.
 
 The shared package will define stable types and validation rules only. It will not implement scanning, policy, routing, or UI logic.
 

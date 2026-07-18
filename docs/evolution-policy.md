@@ -1,5 +1,9 @@
 # Evolution Policy
 
+Project Adrasteia governs the structural evolution of the Fates Runtime Protocol. It does not
+turn schema compatibility into runtime authorization; Ananke remains the owner of policy,
+approval, and governed execution.
+
 This document describes how the shared contract surface should evolve without adding runtime
 logic. It reflects current repository rules and calls out unresolved questions explicitly.
 

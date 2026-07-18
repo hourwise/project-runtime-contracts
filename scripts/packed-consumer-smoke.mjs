@@ -62,6 +62,7 @@ try {
     "docs/downstream-migration.md",
     "docs/design-gates.md",
     "docs/decisions/ADR-0005-adoption-baseline-release-classification.md",
+    "docs/decisions/ADR-0006-project-adrasteia-identity.md",
   ];
   const requiredFiles = [
     ...requiredDocumentation,

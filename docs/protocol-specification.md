@@ -1,4 +1,9 @@
-# Protocol Specification
+# Fates Runtime Protocol Specification
+
+Project Adrasteia is the canonical project identity for the shared Fates Runtime Protocol.
+Adrasteia owns portable contract representation and structural validation; it does not enforce
+runtime authority. A schema-valid request is not necessarily an authorised request, and Ananke
+remains the owner of policy, approval, and governed execution.
 
 This document describes the public contract surface exported from
 [`src/index.ts`](../src/index.ts). It is limited to implemented repository evidence:
@@ -8,7 +13,7 @@ are not current protocol behaviour.
 
 ## Scope
 
-This repository owns shared representation, validation, vocabulary, version metadata,
+Project Adrasteia owns shared representation, structural validation, vocabulary, version metadata,
 and compatibility helpers. It does not own runtime policy semantics, orchestration
 policy, memory retrieval semantics, host UX, or transport implementation behaviour.
 

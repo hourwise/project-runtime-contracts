@@ -2,7 +2,7 @@
 
 - **Status:** Accepted
 - **Date:** 2026-07-12
-- **Decision owners:** Project Runtime Contracts maintainers
+- **Decision owners:** Project Adrasteia maintainers
 - **Applies to:** Protocol 1.4.0 model, speech, locale, and provider/model-change records
 
 ## Context
@@ -23,7 +23,7 @@ Transcript confidence is optional and is a finite number in the inclusive range 
 Omission is distinct from zero. `TranscriptSegment` uses finite non-negative millisecond
 timings with `endMs >= startMs` and requires an explicit `requiresConfirmation` boolean.
 
-`locale` and speech-provider `supportedLocales` use the Mnemosyne/Runtime Contracts Portable
+`locale` and speech-provider `supportedLocales` use the Mnemosyne/Project Adrasteia Runtime Contracts Portable
 Locale Profile:
 
 1. the platform's BCP 47 structural validator must accept the tag;

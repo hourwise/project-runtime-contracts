@@ -1,9 +1,18 @@
-# Project Runtime Contracts
+# Project Adrasteia
 
-Project Runtime Contracts defines the shared protocol vocabulary, schemas, types, and
-compatibility helpers used across the runtime ecosystem. It is a contracts-only package:
-it does not implement policy engines, orchestration, memory systems, transport adapters,
-or other runtime logic.
+Project Adrasteia is the canonical project identity for the Fates Runtime Protocol. Its
+repository identity is `Project-Adrasteia`; its current Stage-A package remains
+`project-runtime-contracts`. Adrasteia defines shared runtime-contract vocabulary, schemas,
+types, and compatibility helpers. It is a contracts-only package: it does not implement policy
+engines, orchestration, memory systems, transport adapters, or other runtime logic.
+
+Adrasteia owns portable contract representation and structural validation. It does not enforce
+runtime authority: a schema-valid request is not necessarily an authorised request. Ananke owns
+policy, approval, and governed execution.
+
+The serialized protocol identity is **Fates Runtime Protocol**. The intended future scoped package
+identity is `@fates/runtime-contracts`, pending scope ownership and explicit release authority;
+no scoped publication is claimed.
 
 Out of scope for this package: policy engines, orchestration logic, memory systems,
 retrieval and reliability scoring, context packs or memory stores, persistence, database

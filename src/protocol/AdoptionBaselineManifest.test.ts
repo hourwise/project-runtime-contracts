@@ -11,6 +11,9 @@ describe("AdoptionBaselineManifest", () => {
   it("validates the explicitly non-final example record", () => {
     const parsed = AdoptionBaselineManifestSchema.parse(example);
     expect(parsed.recordStatus).toBe("example");
+    expect(parsed.projectName).toBe("Project Adrasteia");
+    expect(parsed.repositoryIdentity).toBe("Project-Adrasteia");
+    expect(parsed.protocolIdentity).toBe("Fates Runtime Protocol");
     expect(parsed.packageName).toBe("project-runtime-contracts");
     expect(parsed.contentPreflightIncluded).toBe(false);
   });
@@ -46,4 +49,3 @@ describe("AdoptionBaselineManifest", () => {
     ).toThrow();
   });
 });
-

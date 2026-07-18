@@ -127,7 +127,7 @@ export const DelegationRequestSchema = z
 export type DelegationRequest = z.infer<typeof DelegationRequestSchema>;
 
 /**
- * Portable descriptor for an already-issued grant. Runtime Contracts describes the grant;
+ * Portable descriptor for an already-issued grant. Adrasteia runtime contracts describe the grant;
  * it does not mint, sign, store, validate, revoke, or exchange credentials.
  */
 export const DelegationDescriptorSchema = z

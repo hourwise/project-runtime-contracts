@@ -1,5 +1,10 @@
 # Downstream migration guide
 
+Project Adrasteia is the project identity; `project-runtime-contracts` is the current Stage-A
+package identity. Adrasteia supplies representation and structural validation only. A
+schema-valid request is not necessarily authorised, and Ananke remains the owner of policy,
+approval, and governed execution.
+
 This is an adoption checklist for Ananke, Mnemosyne, Horae, Moirae Code, or another peer.
 It is not a claim that any peer has already migrated.
 

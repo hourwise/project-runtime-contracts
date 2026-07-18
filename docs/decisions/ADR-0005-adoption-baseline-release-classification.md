@@ -1,4 +1,4 @@
-# ADR-0005: Adoption Baseline Release Classification
+# ADR-0005: Project Adrasteia Adoption Baseline Release Classification
 
 - Status: Accepted
 - Date: 2026-07-17
@@ -92,7 +92,7 @@ Legacy draft payloads receive no implicit compatibility claim. A downstream cons
    owning repository.
 
 Ananke-specific conversions belong in Ananke or an Ananke-owned integration package. They are
-not generic Runtime Contracts helpers.
+not generic Project Adrasteia runtime-contract helpers.
 
 ## Rollback
 

@@ -1,4 +1,4 @@
-# Ananke Packed-Consumer And Adapter Report
+# Project Adrasteia Ananke Packed-Consumer And Adapter Report
 
 ## Evidence Boundary
 
@@ -15,8 +15,11 @@
 
 Ananke is private package `ananke@0.1.0` at the reviewed commit and does not declare
 `project-runtime-contracts`. The consumer test copies pinned representative payload data into a
-temporary project, installs the Runtime Contracts tarball, imports only the package root, and
-does not modify or import Ananke source.
+temporary project, installs the Project Adrasteia runtime-contracts tarball, imports only the
+package root, and does not modify or import Ananke source.
+
+Adrasteia owns portable representation and structural validation only. A schema-valid request is
+not thereby authorised; Ananke remains the owner of policy, approval, and governed execution.
 
 ## Result
 
@@ -43,7 +46,7 @@ Ananke-owned integration package.
 | Execution context | `ExecutionIdentity` and `ExecutionContext` contain agent, tenant, string scope, session, auth metadata, and Ananke-owned `policyVersion` | `AgentExecutionContext` | Structural adapter plus additional context | Map agent and session/tenant fields; add trusted authenticated principal and `runtimeId`. Keep `policyVersion` in Ananke domain data. Validate with `AgentExecutionContextSchema`. |
 | Tenant/project/workspace scope | `tenantId` exists; project/workspace identifiers do not occur in these exported execution shapes | `AgentExecutionContext.tenantId/projectId/workspaceId` | Direct field plus additional-context requirement | Copy non-empty `tenantId`. Supply project/workspace only when a trusted Ananke source has them; do not derive them from the scope string. |
 | Resource scope | `resourceScope: string`, including examples such as `filesystem:/workspace` and wildcard forms such as `filesystem:*` | `ResourceScope` | Structural adapter; wildcard inputs blocked by unresolved semantics | Parse a known non-wildcard namespace into explicit bounded fields and retain `tenantId`. Validate with `ResourceScopeSchema`. Wildcards are rejected and require an Ananke migration decision; never translate `*` to `unscoped`. |
-| Request/correlation/causation IDs | Not present in exported execution identity/context | `CorrelationContext` | Additional-context requirement | Generate or propagate `requestId` and `correlationId` at the Ananke request boundary; propagate `causationId` only when known. Runtime Contracts validates but does not generate these IDs. |
+| Request/correlation/causation IDs | Not present in exported execution identity/context | `CorrelationContext` | Additional-context requirement | Generate or propagate `requestId` and `correlationId` at the Ananke request boundary; propagate `causationId` only when known. Adrasteia runtime contracts validate but do not generate these IDs. |
 | Action ID | `ApprovalGrant.actionHash` is a canonical action binding, not an action identifier | `CorrelationContext.actionId` / `ReferenceId` | Additional-context requirement; action hash domain-owned | Do not map `actionHash` to `actionId`. Add a distinct action identifier if Ananke adopts one. Keep hashing and binding semantics in Ananke. |
 | Approval reference | `ApprovalGrant.id`, execution-context `policyVersion`; optional binding/hash fields | `ApprovalReference` | Rename-only/structural reference adapter | Map `id` to `approvalId`, add `sourceRuntime: "ananke"`, and copy `policyVersion` when present. Do not claim that `actionHash` is `requestHash` without an Ananke decision. Validate with `ApprovalReferenceSchema`. |
 | Delegation reference | No portable grant or delegation descriptor; capability/tool names are not grants | `GrantReference` / `DelegationDescriptor` | Additional-context requirement | Ananke must issue or receive an actual grant before emitting a reference/descriptor. A capability declaration must not be adapted into a grant. |
@@ -76,6 +79,5 @@ do not replace them.
 ## Content Preflight
 
 Content preflight is non-blocking for the contract families above. Ananke's local types remain
-authoritative within Ananke. Runtime Contracts makes no compatibility claim for them and adds no
+authoritative within Ananke. Adrasteia runtime contracts make no compatibility claim for them and add no
 preflight adapter or schema in this baseline.
-

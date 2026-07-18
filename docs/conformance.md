@@ -1,5 +1,9 @@
 # Conformance
 
+Project Adrasteia owns the portable representation and structural validation tested here. A
+conforming schema parse does not establish runtime authority or authorization; those semantics
+remain with the owning Fate, including Ananke for policy and governed execution.
+
 This document separates what the repository already tests from additional evidence a
 third-party implementation should provide when claiming compatibility.
 

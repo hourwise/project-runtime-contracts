@@ -6,6 +6,10 @@ it is not fabricated here.
 
 ## Unreleased
 
+- Adopted Project Adrasteia as the project identity, `Project-Adrasteia` as the repository
+  identity, and `Fates Runtime Protocol` as the serialized protocol identity. The Stage-A package
+  remains `project-runtime-contracts`; the intended scoped name remains `@fates/runtime-contracts`
+  without a publication claim.
 - Added the Stage-A adoption-baseline manifest schema/example/generator, 87-case first-migration
   conformance catalog, packed public-surface verification, and a pinned read-only Ananke consumer
   test. The proposed tag is documented but not created; no package or release is published.

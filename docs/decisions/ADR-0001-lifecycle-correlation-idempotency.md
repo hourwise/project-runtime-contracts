@@ -2,7 +2,7 @@
 
 - **Status:** Accepted
 - **Date:** 2026-07-12
-- **Decision owners:** Project Runtime Contracts maintainers
+- **Decision owners:** Project Adrasteia maintainers
 - **Applies to:** Protocol 1.3.0 lifecycle records
 
 ## Context

@@ -45,7 +45,7 @@ After editing:
 
 
 PROJECT: project-runtime-contracts
-REPOSITORY: https://github.com/hourwise/project-runtime-contracts
+REPOSITORY: https://github.com/hourwise/Project-Adrasteia
 
 PRIMARY GOAL
 Treat documentation as part of the public protocol. Define semantics, ownership, compatibility, negotiation, evolution, and conformance without adding runtime logic or resolving domain decisions belonging to other projects.

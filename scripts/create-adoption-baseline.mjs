@@ -5,7 +5,7 @@ import { dirname, isAbsolute, join, relative, resolve } from "node:path";
 import { fileURLToPath, pathToFileURL } from "node:url";
 
 const repositoryRoot = resolve(dirname(fileURLToPath(import.meta.url)), "..");
-const proposedTag = "runtime-contracts-adoption-v0.4.0-protocol-1.4.0";
+const proposedTag = "adrasteia-adoption-v0.4.0-protocol-1.4.0";
 const npmExecutable = process.platform === "win32" ? "npm.cmd" : "npm";
 
 const argument = (name, fallback) => {
@@ -97,6 +97,9 @@ if (
 const manifest = {
   schemaVersion: "1.0.0",
   recordStatus: "generated",
+  projectName: "Project Adrasteia",
+  repositoryIdentity: "Project-Adrasteia",
+  protocolIdentity: "Fates Runtime Protocol",
   packageName: packageMetadata.name,
   futurePackageName: "@fates/runtime-contracts",
   packageVersion: packageMetadata.version,
@@ -106,7 +109,7 @@ const manifest = {
     minimum: builtModule.ProtocolVersion.minimumSupported,
     maximum: builtModule.ProtocolVersion.version,
   },
-  sourceRepository: "https://github.com/hourwise/project-runtime-contracts",
+  sourceRepository: "https://github.com/hourwise/Project-Adrasteia",
   sourceCommit,
   proposedTag,
   artifactFilename,
@@ -131,6 +134,7 @@ const manifest = {
     "docs/ananke-adapter-report.md",
     "docs/dependency-advisory-review.md",
     "docs/decisions/ADR-0005-adoption-baseline-release-classification.md",
+    "docs/decisions/ADR-0006-project-adrasteia-identity.md",
   ],
   fixtureFamilies,
   consumerTests: [

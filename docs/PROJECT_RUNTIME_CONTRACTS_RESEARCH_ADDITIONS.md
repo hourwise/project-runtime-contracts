@@ -1,4 +1,4 @@
-# Project Runtime Contracts — Research Additions
+# Project Adrasteia — Runtime Contracts Research Additions
 
 ## Purpose
 

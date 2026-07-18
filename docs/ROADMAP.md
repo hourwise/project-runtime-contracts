@@ -1,4 +1,4 @@
-# Project Runtime Contracts Roadmap
+# Project Adrasteia Runtime Contracts Roadmap
 
 This roadmap turns the proposals in
 [`PROJECT_RUNTIME_CONTRACTS_RESEARCH_ADDITIONS.md`](./PROJECT_RUNTIME_CONTRACTS_RESEARCH_ADDITIONS.md)

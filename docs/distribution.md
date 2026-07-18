@@ -1,11 +1,13 @@
-# Distribution and compatibility manifest
+# Project Adrasteia distribution and compatibility manifest
 
+Project Adrasteia is the project identity and `Project-Adrasteia` is the repository identity.
+The serialized protocol identity is `Fates Runtime Protocol`.
 `package.json` package version and `ProtocolVersion` protocol version are independent.
 The current repository package is `project-runtime-contracts` at `0.4.0` and advertises
 protocol `1.4.0` through `1.0.0`; no registry publication authority is assigned here.
 
 The proposed first immutable tag is
-`runtime-contracts-adoption-v0.4.0-protocol-1.4.0`. It identifies package and protocol context
+`adrasteia-adoption-v0.4.0-protocol-1.4.0`. It identifies the project and protocol context
 without claiming npm publication. It has not been created. The final artifact and tag must point
 to the final commit produced after this pass, not the reviewed pre-pass commit
 `94df00f43fc90c78aba59763b585614a50f9b695`.
@@ -16,7 +18,7 @@ The current install and import name remains `project-runtime-contracts`. Renamin
 pass would break current local package references and the repository contains no evidence that
 the `@fates` npm scope is owned or that publication is authorized.
 
-The recommended future canonical name is `@fates/runtime-contracts`, subject to explicit npm
+The recommended future scoped package name is `@fates/runtime-contracts`, subject to explicit npm
 scope ownership and release authorization. Migration must produce one implementation, not two
 diverging packages: publish the same built surface under the authorized scoped name, deprecate
 the old name only after consumers have an upgrade path, and record the mapping in release notes.

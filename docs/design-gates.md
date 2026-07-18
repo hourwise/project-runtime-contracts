@@ -1,5 +1,8 @@
 # Design gates and unresolved decisions
 
+Project Adrasteia owns the portable contract surface and structural validation. These gates do
+not transfer runtime authority from Ananke or any other semantic owner.
+
 The following items remain deliberately open. They must be decided by the named owner
 before a future change turns them into normative protocol behaviour.
 

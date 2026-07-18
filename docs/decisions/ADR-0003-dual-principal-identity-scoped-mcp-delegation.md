@@ -1,10 +1,10 @@
 # ADR-0003: Dual-Principal Identity, Scoped MCP Delegation, and Cross-Runtime Compatibility
 
 - **Status:** Accepted
-- **Implementation status:** Partially implemented in Runtime Contracts; enforcement and downstream adoption pending
+- **Implementation status:** Partially implemented in Project Adrasteia runtime contracts; enforcement and downstream adoption pending
 - **Date:** 2026-07-13
 - **Decision owners:** Project Ananke / Project Horae maintainers
-- **Applies to:** Project Ananke, Project Horae, Project Mnemosyne, Project Runtime Contracts, Project Moirae Code
+- **Applies to:** Project Ananke, Project Horae, Project Mnemosyne, Project Adrasteia, Project Moirae Code
 - **Related concerns:** MCP access control, agent identity, human delegation, short-lived credentials, standalone runtime operation, ecosystem compatibility
 
 ## Context
@@ -36,7 +36,7 @@ The Fates ecosystem already separates responsibilities:
 - **Ananke** governs execution and policy enforcement.
 - **Horae** coordinates runtimes, sessions, identities, and execution context.
 - **Mnemosyne** governs memory and evidence, but must not grant authority.
-- **Runtime Contracts** defines the shared protocol and data structures.
+- **Project Adrasteia** defines the shared protocol and data structures.
 - **Moirae Code** provides a governed developer surface and must not create bypass paths around the enforcement boundary.
 
 This ADR makes delegated identity, capability scoping, short-lived credentials, compatibility checking, and standalone operation explicit architectural requirements.
@@ -52,7 +52,7 @@ Every governed request must distinguish:
 
 Access shall be granted only when the combined user, agent, session, capability, resource, purpose, and time constraints are satisfied.
 
-Ananke shall be the final policy enforcement point for governed actions. Horae shall assemble and propagate the execution context. Runtime Contracts shall define the portable identity, delegation, capability, and decision envelopes. Mnemosyne may supply contextual evidence but shall never independently enlarge authority.
+Ananke shall be the final policy enforcement point for governed actions. Horae shall assemble and propagate the execution context. Project Adrasteia runtime contracts shall define the portable identity, delegation, capability, and decision envelopes. Mnemosyne may supply contextual evidence but shall never independently enlarge authority.
 
 Where a target MCP server or API supports scoped, short-lived credentials, Ananke or a dedicated credential-broker component shall mint or obtain a temporary credential bound to the approved request.
 
@@ -335,7 +335,7 @@ Each repository should maintain a machine-readable compatibility declaration, fo
 }
 ```
 
-The exact filename and schema should be standardised in Runtime Contracts.
+The exact filename and schema should be standardised in Project Adrasteia runtime contracts.
 
 ## Required cross-repository review process
 
@@ -344,7 +344,7 @@ Before a milestone or release, an agent may be given read-only access to the oth
 The review must:
 
 1. inspect actual code, manifests, exported types, tests, ADRs, and current documentation;
-2. compare implementation against Runtime Contracts;
+2. compare implementation against Project Adrasteia runtime contracts;
 3. distinguish confirmed incompatibilities from uncertain or undocumented assumptions;
 4. avoid changing repositories during the initial review;
 5. produce a structured report for the repository being assessed;
@@ -364,7 +364,7 @@ The ecosystem should add:
 - protocol compatibility tests;
 - consumer-driven contract tests where appropriate;
 - a small cross-runtime integration test suite;
-- CI checks against supported Runtime Contracts versions;
+- CI checks against supported Project Adrasteia runtime-contract versions;
 - a compatibility matrix in each release;
 - detection of duplicate exported contract types;
 - checks that no direct credential path bypasses Ananke;
@@ -441,14 +441,14 @@ Rejected because it destroys standalone operation, increases coupling, and makes
 
 ## Implementation sequence
 
-1. Add dual-principal and delegation types to Runtime Contracts.
+1. Add dual-principal and delegation types to Project Adrasteia runtime contracts.
 2. Add capability-grant and broker-decision envelopes.
 3. Add reason codes and typed outcomes to Ananke.
 4. Add execution-context propagation to Horae.
 5. Add broker interface and coarse-credential fallback policy to Ananke.
 6. Add audit fields without storing secrets.
 7. Add tests proving memory cannot recreate authority.
-8. Add compatibility declaration schema to Runtime Contracts.
+8. Add compatibility declaration schema to Project Adrasteia runtime contracts.
 9. Add standalone build tests to every repository.
 10. Add a pinned cross-repository integration workflow.
 11. Add Moirae Code checks preventing direct credential exposure or bypass.

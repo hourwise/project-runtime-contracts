@@ -1,5 +1,8 @@
 # Versioning Notes
 
+Project Adrasteia is the project identity for the Fates Runtime Protocol. This page describes
+the versioning of its current `project-runtime-contracts` package and protocol contracts.
+
 This is a concise history and navigation page. The detailed compatibility algorithm is in
 [version negotiation](./version-negotiation.md), and the change-classification policy is in
 [evolution policy](./evolution-policy.md).

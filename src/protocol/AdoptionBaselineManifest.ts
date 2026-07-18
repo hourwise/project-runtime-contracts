@@ -44,13 +44,16 @@ export const AdoptionValidationEvidenceSchema = z.object({
 export type AdoptionValidationEvidence = z.infer<typeof AdoptionValidationEvidenceSchema>;
 
 /**
- * Immutable evidence about a packaged Runtime Contracts adoption artifact.
+ * Immutable evidence about a packaged Project Adrasteia runtime-contracts artifact.
  * This is release metadata, not a runtime registration or compatibility declaration.
  */
 export const AdoptionBaselineManifestSchema = z
   .object({
     schemaVersion: SemanticVersionSchema,
     recordStatus: AdoptionBaselineRecordStatusSchema,
+    projectName: z.literal("Project Adrasteia"),
+    repositoryIdentity: z.literal("Project-Adrasteia"),
+    protocolIdentity: z.literal("Fates Runtime Protocol"),
     packageName: z.literal("project-runtime-contracts"),
     futurePackageName: z.literal("@fates/runtime-contracts"),
     packageVersion: SemanticVersionSchema,
@@ -59,7 +62,7 @@ export const AdoptionBaselineManifestSchema = z
     supportedProtocolRange: ProtocolVersionRangeSchema,
     sourceRepository: z.string().url(),
     sourceCommit: z.string().regex(/^[a-f0-9]{40}$/, "Source commit must be a full lowercase Git SHA"),
-    proposedTag: NonEmptyStringSchema,
+    proposedTag: z.literal("adrasteia-adoption-v0.4.0-protocol-1.4.0"),
     artifactFilename: z.string().regex(/\.tgz$/, "Artifact filename must identify an npm tarball"),
     artifactSha256: z.string().regex(/^[a-f0-9]{64}$/, "Artifact digest must be lowercase SHA-256"),
     artifactSizeBytes: z.number().int().positive(),
@@ -119,4 +122,3 @@ export type AdoptionBaselineManifest = z.infer<typeof AdoptionBaselineManifestSc
 
 export const parseAdoptionBaselineManifest = (value: unknown): AdoptionBaselineManifest =>
   AdoptionBaselineManifestSchema.parse(value);
-

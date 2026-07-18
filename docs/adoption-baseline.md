@@ -15,7 +15,10 @@ validators are pre-release corrections within unreleased protocol `1.4.0`, not a
 
 | Field | Baseline value |
 | --- | --- |
-| Source repository | `https://github.com/hourwise/project-runtime-contracts` |
+| Project identity | `Project Adrasteia` |
+| Repository identity | `Project-Adrasteia` |
+| Source repository | `https://github.com/hourwise/Project-Adrasteia` |
+| Serialized protocol identity | `Fates Runtime Protocol` |
 | Previous commit reviewed before this pass | `94df00f43fc90c78aba59763b585614a50f9b695` |
 | Final baseline commit | Generated from the final clean commit; not the pre-pass commit |
 | Package name | `project-runtime-contracts` |
@@ -24,10 +27,15 @@ validators are pre-release corrections within unreleased protocol `1.4.0`, not a
 | Protocol current | `1.4.0` |
 | Protocol minimum | `1.0.0` |
 | Supported protocol range | `1.0.0` through `1.4.0` |
-| Proposed tag | `runtime-contracts-adoption-v0.4.0-protocol-1.4.0` |
+| Proposed tag | `adrasteia-adoption-v0.4.0-protocol-1.4.0` |
 
 Stage A retains one implementation. It does not publish two diverging package identities and
-does not claim that either name is available from npm.
+does not claim that either package name is available from npm. The repository identity is a
+project naming decision; the source repository is now `https://github.com/hourwise/Project-Adrasteia`.
+
+Adrasteia owns portable contract representation and structural validation. It does not enforce
+runtime authority. A schema-valid request is not necessarily an authorised request; Ananke remains
+the owner of policy, approval, and governed execution.
 
 ## Baseline Record
 
@@ -87,12 +95,12 @@ kept separately under `tests/consumer`.
 ## Ananke Result
 
 The reviewed Ananke commit is
-`1e38e4580ca0f8db46a35dce67362e0e2467d794`. It has no declared Runtime Contracts dependency.
+`1e38e4580ca0f8db46a35dce67362e0e2467d794`. It has no declared Project Adrasteia runtime-contract dependency.
 Its current shapes do not directly satisfy the canonical execution, scope, correlation,
 registration, or protocol envelopes. A packed external-consumer test therefore reports
 `adapter_required`; see the [adapter report](./ananke-adapter-report.md).
 
-The adapters must remain Ananke-owned. Runtime Contracts does not absorb Ananke policy,
+The adapters must remain Ananke-owned. Adrasteia runtime contracts do not absorb Ananke policy,
 approval, outcome, audit, canonical-hash, or content-preflight semantics.
 
 ## Content Preflight
@@ -132,7 +140,7 @@ digest matches the tarball, and that the working tree is still clean. Then creat
 tag without implying npm publication:
 
 ```text
-git tag -a runtime-contracts-adoption-v0.4.0-protocol-1.4.0 -m "Runtime Contracts adoption baseline: package 0.4.0, protocol 1.4.0"
+git tag -a adrasteia-adoption-v0.4.0-protocol-1.4.0 -m "Project Adrasteia adoption baseline: package 0.4.0, protocol 1.4.0"
 ```
 
 This repository does not create or push that tag automatically. Tags and artifacts are immutable;
@@ -141,11 +149,10 @@ published tag.
 
 ## Downstream Order
 
-1. Commit and generate the clean Runtime Contracts baseline.
+1. Commit and generate the clean Project Adrasteia baseline.
 2. Verify and, with explicit authorization, create the proposed annotated tag.
 3. Pin Ananke to the measured tarball/tag and implement its boundary adapters.
 4. Migrate identity, scope, correlation/reference, registration/readiness/health, and protocol
    families before broader delegation adoption.
 5. Keep content preflight and other owner-specific domains outside this migration.
 6. Use the same evidence-led process for Mnemosyne, Horae, and Moirae Code after Ananke.
-

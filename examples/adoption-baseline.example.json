@@ -1,6 +1,9 @@
 {
   "schemaVersion": "1.0.0",
   "recordStatus": "example",
+  "projectName": "Project Adrasteia",
+  "repositoryIdentity": "Project-Adrasteia",
+  "protocolIdentity": "Fates Runtime Protocol",
   "packageName": "project-runtime-contracts",
   "futurePackageName": "@fates/runtime-contracts",
   "packageVersion": "0.4.0",
@@ -10,9 +13,9 @@
     "minimum": "1.0.0",
     "maximum": "1.4.0"
   },
-  "sourceRepository": "https://github.com/hourwise/project-runtime-contracts",
+  "sourceRepository": "https://github.com/hourwise/Project-Adrasteia",
   "sourceCommit": "0000000000000000000000000000000000000000",
-  "proposedTag": "runtime-contracts-adoption-v0.4.0-protocol-1.4.0",
+  "proposedTag": "adrasteia-adoption-v0.4.0-protocol-1.4.0",
   "artifactFilename": "project-runtime-contracts-0.4.0.tgz",
   "artifactSha256": "0000000000000000000000000000000000000000000000000000000000000000",
   "artifactSizeBytes": 1,
@@ -23,7 +26,8 @@
     "README.md",
     "CHANGELOG.md",
     "docs/adoption-baseline.md",
-    "docs/ananke-adapter-report.md"
+    "docs/ananke-adapter-report.md",
+    "docs/decisions/ADR-0006-project-adrasteia-identity.md"
   ],
   "fixtureFamilies": [
     {
@@ -57,4 +61,3 @@
     }
   ]
 }
-

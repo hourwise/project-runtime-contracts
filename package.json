@@ -1,7 +1,7 @@
 {
   "name": "project-runtime-contracts",
   "version": "0.4.0",
-  "description": "Portable runtime protocol contracts for the Fates ecosystem",
+  "description": "Project Adrasteia runtime protocol contracts for the Fates ecosystem",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
   "files": [

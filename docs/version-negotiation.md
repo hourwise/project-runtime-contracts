@@ -1,5 +1,8 @@
 # Version Negotiation
 
+Project Adrasteia defines the structural version and compatibility representation for the Fates
+Runtime Protocol. It does not authorize a runtime or infer authority from a successful negotiation.
+
 This document defines the currently implemented compatibility model for package versions,
 protocol versions, and capability advertisement.
 

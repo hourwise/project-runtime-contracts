@@ -1,11 +1,11 @@
-# ADR-0004: Runtime Contracts Ownership of Dual-Principal Delegation and Compatibility
+# ADR-0004: Project Adrasteia Ownership of Runtime Contracts for Dual-Principal Delegation and Compatibility
 
 - **Status:** Accepted
 - **Implementation status:** Partially implemented; downstream adoption and composed conformance remain pending
 - **Date:** 2026-07-14
 - **Parent decision:** [ADR-0003: Dual-Principal Identity, Scoped MCP Delegation, and Cross-Runtime Compatibility](./ADR-0003-dual-principal-identity-scoped-mcp-delegation.md)
 - **Related decision:** MCP 2026-07-28 Stateless Compatibility Architecture
-- **Project:** Project Runtime Contracts
+- **Project:** Project Adrasteia
 - **Decision scope:** Canonical portable contracts only
 
 ## Context
@@ -14,11 +14,11 @@ The ecosystem-wide decision requires shared representations for human and agent 
 
 Without one canonical owner, each runtime is likely to create subtly incompatible principal, session, audit, grant, and compatibility shapes.
 
-Runtime Contracts must remain implementation-free. It must not contain Ananke policy, Horae workflow engines, Mnemosyne reliability logic, credential storage, network calls, or persistence.
+Project Adrasteia runtime contracts must remain implementation-free. They must not contain Ananke policy, Horae workflow engines, Mnemosyne reliability logic, credential storage, network calls, or persistence.
 
 ## Decision
 
-Project Runtime Contracts SHALL be the canonical owner of portable cross-runtime schemas for:
+Project Adrasteia SHALL be the canonical owner of portable cross-runtime schemas for:
 
 - delegating, authenticated, represented, and acting principals;
 - runtime and client identity;
@@ -92,7 +92,7 @@ The documentation SHALL state:
 Define independent fields for:
 
 - package version;
-- Runtime Contracts schema/protocol version;
+- Project Adrasteia runtime-contract schema/protocol version;
 - supported MCP specification versions;
 - supported MCP protocol eras;
 - minimum and preferred versions.
@@ -104,7 +104,7 @@ MCP date-based versions SHALL NOT be represented as Fates semantic protocol vers
 Standardise a machine-readable manifest containing:
 
 - runtime name and package version;
-- Runtime Contracts version range;
+- Project Adrasteia runtime-contract version range;
 - supported MCP versions and eras;
 - required and optional sibling integrations;
 - endpoint and transport capabilities;
@@ -119,7 +119,8 @@ Define portable, non-authoritative references. Do not define persistence or exec
 
 ## Ownership boundaries
 
-Runtime Contracts owns shape and meaning.
+Project Adrasteia owns portable shape and structural validation; domain owners retain authority
+meaning.
 
 Ananke owns:
 
@@ -165,7 +166,8 @@ Moirae Code owns:
 3. Discovery contracts never imply admission.
 4. Optional fields never silently broaden authority.
 5. Unknown principal, scope, protocol, or compatibility states remain representable as failures.
-6. Runtime Contracts contains no secret material, credential exchange, policy engine, or persistence.
+6. Project Adrasteia runtime contracts contain no secret material, credential exchange, policy
+engine, or persistence.
 
 ## Acceptance criteria
 

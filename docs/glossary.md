@@ -3,6 +3,19 @@
 This glossary defines repository terminology using implemented source and current project
 docs. Where a term is not yet represented by a public contract, that is stated explicitly.
 
+## Project Adrasteia
+
+The canonical project identity for the Fates Runtime Protocol. Adrasteia owns portable contract
+representation and structural validation, but does not enforce runtime authority. A
+schema-valid request is not necessarily an authorised request; Ananke owns policy, approval, and
+governed execution.
+
+## Project-Adrasteia
+
+The repository identity associated with Project Adrasteia. It is a project/repository naming
+decision and does not rename the current Stage-A package `project-runtime-contracts` or claim that
+the GitHub repository has already moved.
+
 ## Runtime
 
 An independently identifiable component in the ecosystem that can advertise identity,
